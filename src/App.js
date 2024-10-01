@@ -3,8 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
+import AuthPage from './components/AuthPage';
+import ATMSimulator from './components/ATMSimulator';
 
 const App = () => {
   return (
@@ -12,8 +12,8 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/atm-simulator" element={<ATMSimulator />} />
       </Routes>
     </Router>
   );

@@ -1,7 +1,7 @@
 // src/components/Navbar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Navbar.css'; // Ensure this file exists or remove this line if not using CSS
+import './Navbar.css';
 
 const Navbar = () => {
   return (
@@ -12,10 +12,7 @@ const Navbar = () => {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/signin">Sign In</Link>
-        </li>
-        <li>
-          <Link to="/signup">Sign Up</Link>
+          <Link to="/auth">Sign In / Sign Up</Link>
         </li>
       </ul>
     </nav>

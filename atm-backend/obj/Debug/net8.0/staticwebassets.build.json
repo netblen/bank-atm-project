@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "dbFNZGSxVgkkpPVYCVgasTVgAlap4CIFKqwtbZB5fmw=",
+  "Source": "atm-backend",
+  "BasePath": "_content/atm-backend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

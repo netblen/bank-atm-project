@@ -1,0 +1,78 @@
+/* src/components/Home.css */
+
+.home-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f5f7fa;
+    color: #333;
+  }
+  
+  .home-header {
+    margin-bottom: 50px;
+  }
+  
+  .home-header h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .home-header p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .cta-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .cta-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .features-section {
+    margin: 50px 0;
+  }
+  
+  .features-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+  
+  .features-list {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .feature {
+    background-color: #fff;
+    padding: 20px;
+    width: 30%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .feature p {
+    font-size: 1rem;
+  }
+  
+  .home-footer {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #f1f1f1;
+  }
+  
+  .home-footer p {
+    margin-bottom: 20px;
+  }
+  
