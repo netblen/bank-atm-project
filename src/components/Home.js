@@ -1,5 +1,6 @@
 // src/components/Home.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
@@ -8,7 +9,7 @@ const Home = () => {
       <header className="home-header">
         <h1>Welcome to the Bank ATM Simulator</h1>
         <p>Your personal online banking experience, designed to help you manage your finances with ease.</p>
-        <a href="/auth" className="cta-button">Get Started</a>
+        <Link to="/SignIn" className="cta-button">Get Started</Link>
       </header>
 
       <section className="features-section">
@@ -31,7 +32,7 @@ const Home = () => {
 
       <footer className="home-footer">
         <p>Join us and simulate real banking transactions in a secure environment.</p>
-        <a href="/auth" className="cta-button">Create Account</a>
+        <Link to="/SignUp" className="cta-button">Create Account</Link>
       </footer>
     </div>
   );

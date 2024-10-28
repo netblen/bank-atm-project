@@ -1,40 +1,57 @@
-/* src/components/ATMSimulator.css */
+/* ATMSimulator.css */
 
 .atm-simulator-container {
-    text-align: center;
-    padding: 40px;
-    background-color: #f4f7fa;
-  }
-  
-  .atm-simulator-container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-  }
-  
-  .atm-simulator-container p {
-    font-size: 1.2rem;
-    margin-bottom: 40px;
-  }
-  
-  .atm-features {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .feature {
-    background-color: #fff;
-    padding: 20px;
-    width: 22%;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .feature h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-  }
-  
-  .feature p {
-    font-size: 1rem;
-  }
-  
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.atm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10px 20px;
+}
+
+.menu button {
+  margin-right: 15px;
+}
+
+.logout-button {
+  background-color: red;
+  color: white;
+}
+
+.card-info {
+  margin: 20px 0;
+  background-color: #f0f8ff;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.card-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance-section h3 {
+  font-size: 24px;
+}
+
+.atm-buttons .atm-button {
+  margin-right: 10px;
+}
+
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.tab {
+  padding: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  cursor: pointer;
+}
