@@ -191,6 +191,16 @@ namespace atm_backend.Controllers
             return await _context.UserActivityLogs.ToListAsync();
         }
 
+        [HttpGet("recent-activity")]
+        public IActionResult GetRecentActivity(string email)
+        {
+            var activities = _context.UserActivityLogs
+                                    .Where(a => a.Email == email)
+                                    .ToList();
+
+            return Ok(activities);
+        }
+
         //Delete user
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)

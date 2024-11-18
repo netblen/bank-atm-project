@@ -23,6 +23,7 @@ import EditUserAdmin from './components/EditUserAdmin';
 import SystemPerformanceDashboard from './components/SystemPerformanceDashboard'
 import ScheduleAppointment from './components/ScheduleAppointment';
 import RateCustomerExperience from './components/RateCustomerExperience';
+import RecentActivity from './components/RecentActivity';
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="/SignIn" element={<SignIn />} />
           <Route path="/SignUp" element={<SignUp />} />
           <Route path="/atm-simulator" element={<ATMSimulator />} />
+          <Route path="/RecentActivity" element={<RecentActivity />} />
           <Route path="/payments" element={<Payments />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/checking" element={<Checking />} /> 

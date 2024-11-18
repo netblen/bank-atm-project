@@ -38,11 +38,10 @@ const ActivityLog = () => {
     document.body.removeChild(link);
   };
 
-
   return (
     <div className="activitylog">
       <h3>User Activity Log</h3>
-      <button onClick={handleExport}>Export to CSV</button> {/* Botón para exportar */}
+      <button onClick={handleExport}>Export to CSV</button>
       {userActivityLog.length > 0 ? (
         <table>
           <thead>

@@ -141,6 +141,12 @@ const ATMSimulator = () => {
                 <motion.li variants={item}>
                   <button onClick={() => handleRedirect('/Feedback')}>Feedback</button>
                 </motion.li>
+                <motion.li variants={item}>
+                <button onClick={() => handleRedirect('/RecentActivity', { state: { email: userEmail } })}>
+                  Recent Activity
+                </button>
+                </motion.li>
+
               </ul>
             </motion.div>
           )}
