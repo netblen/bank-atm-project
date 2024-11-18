@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useUser } from './UserContext';
+import withAutoLogout from './withAutoLogout';
 import './Checking.css';
+import Papa from 'papaparse';
 
 const Checking = () => {
   const [currentBalance, setCurrentBalance] = useState(0);
@@ -9,6 +11,8 @@ const Checking = () => {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState(null);
   const { userEmail } = useUser();
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const fetchTransactions = useCallback(async () => {
     try {
@@ -58,10 +62,10 @@ const Checking = () => {
           description: "Internet Transfer",
           transaction_type: "T"
         });
-  
+
         await fetchBalance();
         await fetchTransactions();
-  
+
         setAmount('');
         setError(null);
       } catch (err) {
@@ -92,7 +96,7 @@ const Checking = () => {
           description: description,
           transaction_type: transaction_type
         });
-  
+
         await fetchBalance();
         await fetchTransactions();
 
@@ -104,6 +108,39 @@ const Checking = () => {
     }
   };
 
+  const handleFilter = async () => {
+    try {
+      const response = await axios.get('https://localhost:7243/api/ATM/filterTransactionsByDateChecking', {
+        params: {
+          email: userEmail,
+          startDate,
+          endDate,
+        },
+      });
+      setTransactions(response.data.$values || []);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
+  const exportToCSV = () => {
+    const csvData = transactions.map(transaction => ({
+      Date: new Date(transaction.transactionDate).toLocaleDateString(),
+      Description: transaction.description,
+      Amount: transaction.amount.toFixed(2)
+    }));
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'transactions.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="checkings-container">
       <h1>Checking Account</h1>
@@ -111,6 +148,24 @@ const Checking = () => {
       {error && <div className="error-message">{error}</div>}
       <div className="transaction-section">
         <h3>Transaction History</h3>
+        <div>
+          <label>Start Date:</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <label>End Date:</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          <button onClick={handleFilter} disabled={!startDate || !endDate}>Filter</button>
+          <button onClick={exportToCSV} disabled={!startDate || !endDate || transactions.length === 0}>
+            Export to CSV
+          </button>
+        </div>
         <table>
           <thead>
             <tr>
@@ -142,11 +197,11 @@ const Checking = () => {
           placeholder="Enter amount"
         />
         <button onClick={handleTransferToSavings} disabled={!amount}>Transfer to Savings</button>
-        <button onClick={() => handleExecuteTransactionCheckings('D','Deposit')} disabled={!amount}>Deposit</button>
-        <button onClick={() => handleExecuteTransactionCheckings('W','Withdrawal')} disabled={!amount}>Withdrawal</button>
+        <button onClick={() => handleExecuteTransactionCheckings('D', 'Deposit')} disabled={!amount}>Deposit</button>
+        <button onClick={() => handleExecuteTransactionCheckings('W', 'Withdrawal')} disabled={!amount}>Withdrawal</button>
       </div>
     </div>
   );
 };
 
-export default Checking;
+export default withAutoLogout(Checking);

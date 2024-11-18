@@ -1,46 +1,60 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Importa el hook useNavigate
+import { useNavigate } from 'react-router-dom';
 import './ForgotPassword.css';
 
 const ForgotPassword = () => {
   const [contactInfo, setContactInfo] = useState('');
   const [securityCode, setSecurityCode] = useState('');
-  const [codeSent, setCodeSent] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   
-  const navigate = useNavigate();  // Crea una instancia del hook para navegar
+  const navigate = useNavigate();
+
+  const validatePassword = (password) => {
+    return /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{6,}$/.test(password);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validación de contraseña
+    if (!validatePassword(newPassword)) {
+      alert('Password must contain at least one uppercase letter, one special character, and one number, and be at least 6 characters long.');
+      return;
+    }
+
+    // Confirmación de contraseña
+    if (newPassword !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
     try {
-      const response = await axios.post('https://localhost:7243/api/users/forgot-password', {
+      const response = await axios.post('https://localhost:7243/api/users/reset-password', {
         contactInfo,
+        securityCode,
+        newPassword,
       });
 
       if (response.status === 200) {
-        setCodeSent(true);
-        setMessage('A security code has been sent to your email or mobile number.');
+        alert('Password changed successfully.');
+        navigate('/signin');
       }
     } catch (error) {
-      console.error('Error sending security code:', error);
+      console.error('Error resetting password:', error);
       setMessage(error.response?.data?.message || 'An error occurred. Please try again.');
     }
   };
 
-  const handleVerifyCode = (e) => {
-    e.preventDefault();
-    console.log('Entered security code:', securityCode);
-    // Aquí va la lógica para verificar el código...
-  };
-
   return (
     <div className="forgot-password-form">
-      <h2>Forgot Password</h2>
+      <h2>Reset Password</h2>
       <form onSubmit={handleSubmit}>
-        <p>Please enter your email or mobile number to search for your account.</p>
+        <p>Please enter your email to reset your password.</p>
         <div>
-          <label>Email / Mobile Number:</label><br />
+          <label>Email:</label><br />
           <input
             type="text"
             value={contactInfo}
@@ -48,27 +62,35 @@ const ForgotPassword = () => {
             required
           />
         </div>
-        <div className="button-container">
-          <button type="button" onClick={() => navigate('/signin')} className="back-button">
-            ←
-          </button>
-          <button type="submit">Send Security Code</button>
+        <div>
+          <label>Security Code (Enter "E2UY32"):</label><br />
+          <input
+            type="text"
+            value={securityCode}
+            onChange={(e) => setSecurityCode(e.target.value)}
+            required
+          />
         </div>
+        <div>
+          <label>New Password:</label><br />
+          <input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Confirm New Password:</label><br />
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Reset Password</button>
       </form>
-      {codeSent && (
-        <form onSubmit={handleVerifyCode}>
-          <div>
-            <label>Security Code:</label><br />
-            <input
-              type="text"
-              value={securityCode}
-              onChange={(e) => setSecurityCode(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit">Verify Code</button>
-        </form>
-      )}
       {message && <p>{message}</p>}
     </div>
   );

@@ -12,6 +12,7 @@ const SignIn = () => {
   const { setUserEmail } = useUser();
   const ROLE_USER = 'User';
   const ROLE_ADMIN = 'Admin';
+
   const handleSignInSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -20,14 +21,20 @@ const SignIn = () => {
         password: signInPassword,
       });
 
-      if (response.status === 200 ) {
+      console.log(response.data); // Verifica qué datos recibes
+
+      if (response.status === 200) {
         setUserEmail(signInEmail);
-        if (response.data.rol === ROLE_USER) {
+        const userRole = response.data.rol || response.data.role; // Asegúrate de que este sea el campo correcto
+
+        if (userRole === ROLE_USER) {
           navigate('/atm-simulator'); // Redirige al simulador ATM para usuarios
-        } else if (response.data.rol === ROLE_ADMIN) {
-          navigate('/admin-dashboard'); // Redirige al panel de administración para administradores
+        } else if (userRole === ROLE_ADMIN) {
+          navigate('/adminDashboard'); // Redirige al panel de administración para administradores
+        } else {
+          alert('Unrecognized role.'); // Manejo de roles no reconocidos
         }
-      }else {
+      } else {
         alert('Invalid email or password. Please try again.');
       }
     } catch (error) {

@@ -10,9 +10,6 @@ using System.ComponentModel.DataAnnotations;
     {
         public int Id { get; set; } // Primary key
 
-        [Required(ErrorMessage = "Username is required.")]
-        public string Username { get; set; } // Username for the user
-
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; } // Email of the user
@@ -58,6 +55,19 @@ using System.ComponentModel.DataAnnotations;
         public string Password { get; set; }
     }
 
+    public class ResetPasswordRequest
+    {
+        public string ContactInfo { get; set; }
+        public string SecurityCode { get; set; }
+        public string NewPassword { get; set; }
+    }
 
+    public class ChangePassword
+    {
+        public string Email { get; set; }
+        public string SecurityQuestion { get; set; }
+        public string SecurityAnswer { get; set; } 
+        public string NewPassword { get; set; }
+    }
 
 }

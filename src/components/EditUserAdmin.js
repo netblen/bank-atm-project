@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import './SignUp.css';
 
-const SignUp = () => {
-  const [signUpData, setSignUpData] = useState({
+const EditUser = () => {
+  const { userId } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState({
     first_name: '',
     last_name: '',
     email: '',
@@ -19,11 +22,24 @@ const SignUp = () => {
     date_of_birth: '',
     rol: 'User',
   });
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7243/api/Users/${userId}`);
+        setUser({ ...response.data, confirmPassword: response.data.password });
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        alert('Error loading user details');
+      }
+    };
+  
+    fetchUser();
+  }, [userId]);
 
   const handleInputChange = (e) => {
-    setSignUpData({ ...signUpData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
   };
 
   const validatePassword = (password) => {
@@ -31,112 +47,87 @@ const SignUp = () => {
   };
 
   const validatePhoneNumber = (phone) => {
-    return /^\d{10}$/.test(phone); // Validación: debe tener exactamente 10 dígitos
+    return /^\d{10}$/.test(phone);
   };
 
-  const handleSignUpSubmit = async (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-
-    // Validación de contraseña
-    if (!validatePassword(signUpData.password)) {
+  
+    if (!validatePassword(user.password)) {
       alert('Password must contain at least one uppercase letter, one special character, and one number.');
       return;
     }
-
-    // Confirmación de contraseña
-    if (signUpData.password !== signUpData.confirmPassword) {
+  
+    if (user.password !== user.confirmPassword) {
       alert('Passwords do not match.');
       return;
     }
-
-    // Validación de número de teléfono
-    if (!validatePhoneNumber(signUpData.telephone)) {
+  
+    if (!validatePhoneNumber(user.telephone)) {
       alert('Telephone must be 10 digits long and contain only numbers.');
       return;
     }
-
-    // Validación de edad
+  
     const today = new Date();
-    const birthDate = new Date(signUpData.date_of_birth);
+    const birthDate = new Date(user.date_of_birth);
     const age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-
+  
     if (age < 18) {
       alert('You must be at least 18 years old to create an account.');
       return;
     }
-
-    // Agregar el prefijo de país al número de teléfono
-    const phoneWithCountryCode = `+1${signUpData.telephone}`;
-    const updatedSignUpData = { ...signUpData, telephone: phoneWithCountryCode };
-
+    
+    const phoneWithCountryCode = `+1${user.telephone}`;
+    const updatedUser = { ...user, telephone: phoneWithCountryCode };
+  
     setLoading(true);
     try {
-      const response = await axios.post('https://localhost:7243/api/users/signup', updatedSignUpData);
-      if (response.status === 200) {
-        alert('Sign up successful. You can now sign in.');
-        navigate('/signin');
-      } else {
-        alert('Sign up failed. Please try again.');
-      }
+      await axios.put(`https://localhost:7243/api/Users/UpdateUserbyAdmin?id=${userId}`, updatedUser);
+      alert('User updated successfully');
+      navigate('/users');
     } catch (error) {
-      console.error('Error during sign-up:', error);
-      if (error.response?.status === 400) {
-        alert('Email already in use. Please use a different email.');
-      } else {
-        alert(error.response?.data?.message || 'An error occurred during sign-up. Please try again.');
-      }
+      console.error('Error updating user:', error);
+      alert('Error saving user');
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <div className="auth-form">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSignUpSubmit}>
+      <h2>Edit User</h2>
+      <form onSubmit={handleSave}>
         <div>
           <label>First Name:</label><br />
-          <input type="text" name="first_name" value={signUpData.first_name} onChange={handleInputChange} required />
+          <input type="text" name="first_name" value={user.first_name} onChange={handleInputChange} required />
         </div>
         <div>
           <label>Last Name:</label><br />
-          <input type="text" name="last_name" value={signUpData.last_name} onChange={handleInputChange} required />
+          <input type="text" name="last_name" value={user.last_name} onChange={handleInputChange} required />
         </div>
         <div>
           <label>Email:</label><br />
-          <input type="email" name="email" value={signUpData.email} onChange={handleInputChange} required />
+          <input type="email" name="email" value={user.email} onChange={handleInputChange} required />
         </div>
         <div>
           <label>Password:</label><br />
-          <input
-            type="password"
-            name="password"
-            value={signUpData.password}
-            onChange={handleInputChange}
-            required
-          />
+          <input type="password" name="password" value={user.password} onChange={handleInputChange} required />
         </div>
         <div>
           <label>Confirm Password:</label><br />
-          <input
-            type="password"
-            name="confirmPassword"
-            value={signUpData.confirmPassword}
-            onChange={handleInputChange}
-            required
-          />
+          <input type="password" name="confirmPassword" value={user.confirmPassword} onChange={handleInputChange} required />
         </div>
         <div>
           <label>Telephone:</label><br />
-          <input type="text" name="telephone" value={signUpData.telephone} onChange={handleInputChange} required />
+          <input type="text" name="telephone" value={user.telephone} onChange={handleInputChange} required />
         </div>
         <div>
           <label>City:</label><br />
-          <select name="city" value={signUpData.city} onChange={handleInputChange} required>
+          <select name="city" value={user.city} onChange={handleInputChange} required>
             <option value="">Select City</option>
             <option value="Montreal">Montreal</option>
             <option value="Quebec City">Quebec City</option>
@@ -151,17 +142,11 @@ const SignUp = () => {
         </div>
         <div>
           <label>Postal Code:</label><br />
-          <input
-            type="text"
-            name="postal_code"
-            value={signUpData.postal_code}
-            onChange={handleInputChange}
-            required
-          />
+          <input type="text" name="postal_code" value={user.postal_code} onChange={handleInputChange} required />
         </div>
         <div>
           <label>Profession:</label><br />
-          <select name="profession" value={signUpData.profession} onChange={handleInputChange} required>
+          <select name="profession" value={user.profession} onChange={handleInputChange} required>
             <option value="">Select Profession</option>
             <option value="employed">Employed</option>
             <option value="student">Student</option>
@@ -170,7 +155,7 @@ const SignUp = () => {
         </div>
         <div>
           <label>Security Question:</label><br />
-          <select name="security_question" value={signUpData.security_question} onChange={handleInputChange} required>
+          <select name="security_question" value={user.security_question} onChange={handleInputChange} required>
             <option value="">Select Security Question</option>
             <option value="What is your mother’s maiden name?">What is your mother’s maiden name?</option>
             <option value="What was the name of your first pet?">What was the name of your first pet?</option>
@@ -185,21 +170,18 @@ const SignUp = () => {
         </div>
         <div>
           <label>Security Answer:</label><br />
-          <input type="text" name="security_answer" value={signUpData.security_answer} onChange={handleInputChange} required />
+          <input type="text" name="security_answer" value={user.security_answer} onChange={handleInputChange} required />
         </div>
         <div>
           <label>Date of Birth:</label><br />
-          <input type="date" name="date_of_birth" value={signUpData.date_of_birth} onChange={handleInputChange} />
+          <input type="date" name="date_of_birth" value={user.date_of_birth.slice(0, 10)} onChange={handleInputChange} required />
         </div>
         <button type="submit" disabled={loading}>
-          {loading ? 'Signing Up...' : 'Sign Up'}
+          {loading ? 'Saving...' : 'Save'}
         </button>
       </form>
-      <div className="already-account">
-        <p>Already have an account? <a href="/signin">Sign In</a></p>
-      </div>
     </div>
   );
 };
 
-export default SignUp;
+export default EditUser;

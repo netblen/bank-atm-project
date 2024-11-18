@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using atm_backend.Data;
 using atm_backend.Data.Models;
+using System.Diagnostics;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -22,6 +23,7 @@ public class ATMController : ControllerBase
         return Ok(transactions);
     }
 
+    //Checking
     [HttpPost("transferBetweenAccountsChecking")]
     public async Task<IActionResult> transferBetweenAccountsChecking([FromBody] TransferRequest request)
     {
@@ -89,7 +91,7 @@ public class ATMController : ControllerBase
                     Email = request.Email,
                     ActivityType = request.transaction_type == "W" ? "Withdrawal" : "Deposit",
                     Amount = request.Amount,
-                    ActivityDate = DateTime.UtcNow
+                    ActivityDate = DateTime.Now
                 };
                 _context.UserActivityLogs.Add(activityLog);
                 await _context.SaveChangesAsync();
@@ -112,7 +114,6 @@ public class ATMController : ControllerBase
             }
         }
     }
-
     [HttpPost("ExecuteTransactionChecking")]
     public async Task<IActionResult> ExecuteTransactionChecking([FromBody] TransferRequest request)
     {
@@ -162,7 +163,7 @@ public class ATMController : ControllerBase
                     Email = request.Email,
                     ActivityType = request.transaction_type == "W" ? "Withdrawal" : "Deposit",
                     Amount = request.Amount,
-                    ActivityDate = DateTime.UtcNow
+                    ActivityDate = DateTime.Now
                 };
                 _context.UserActivityLogs.Add(activityLog);
                 await _context.SaveChangesAsync();
@@ -185,7 +186,32 @@ public class ATMController : ControllerBase
             }
         }
     }
+    [HttpGet("filterTransactionsByDateChecking")]
+    public async Task<IActionResult> filterTransactionsByDateChecking(string email, DateTime startDate, DateTime endDate)
+    {
+        try
+        {
 
+             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user == null)
+                {
+                    return NotFound("User not found.");
+                }
+
+            endDate = endDate.Date.AddDays(1).AddTicks(-1);
+            var transactions = await _context.CheckingTransactions
+                .Where(  t => t.user_id==user.Id && t.TransactionDate >= startDate && t.TransactionDate <= endDate)
+                .OrderBy(t => t.TransactionDate)
+                .ToListAsync();
+
+            return Ok(transactions);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+    //Savings
     [HttpPost("transferBetweenAccountsSavings")]
     public async Task<IActionResult> transferBetweenAccountsSavings([FromBody] TransferRequest request)
     {
@@ -276,4 +302,67 @@ public class ATMController : ControllerBase
             }
         }
     }
+    [HttpGet("filterTransactionsByDateSavings")]
+    public async Task<IActionResult> FilterTransactionsByDateSavings(string email, DateTime startDate, DateTime endDate)
+    {
+        try
+        {
+           var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user == null)
+                {
+                    return NotFound("User not found.");
+                }
+
+            endDate = endDate.Date.AddDays(1).AddTicks(-1);
+            
+            var transactions = await _context.SavingsTransactions
+                .Where(t => t.user_id == user.Id && t.TransactionDate >= startDate && t.TransactionDate <= endDate)
+                .OrderBy(t => t.TransactionDate)
+                .ToListAsync();
+
+            return Ok(transactions);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    //Perfomance
+    [HttpGet("GetSystemMetrics")]
+    public async Task<IActionResult> GetSystemMetrics()
+    {
+        var metrics = new {
+            CpuUsage = GetCpuUsage(),
+            MemoryUsage = GetMemoryUsage(),
+            ResponseTime = await GetAverageResponseTime()
+        };
+        return Ok(metrics);
+    }
+
+    private double GetCpuUsage()
+    {
+        var process = Process.GetCurrentProcess();
+        double totalMilliseconds = process.TotalProcessorTime.TotalMilliseconds;
+        double cpuUsage = (totalMilliseconds / Environment.ProcessorCount) / 
+                          DateTime.UtcNow.Subtract(process.StartTime.ToUniversalTime()).TotalMilliseconds;
+        return Math.Round(cpuUsage * 100, 2); // Convierte a porcentaje
+    }
+
+    private double GetMemoryUsage()
+    {
+        var process = Process.GetCurrentProcess();
+        double memoryUsageInMB = process.WorkingSet64 / (1024 * 1024); // Convierte de bytes a MB
+        return Math.Round(memoryUsageInMB, 2);
+    }
+
+    private async Task<double> GetAverageResponseTime()
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        await Task.Delay(100); 
+        stopwatch.Stop();
+        return Math.Round(stopwatch.Elapsed.TotalMilliseconds, 2); // En milisegundos
+    }
+
 }

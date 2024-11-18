@@ -3,23 +3,36 @@
 .atm-simulator-container {
   font-family: Arial, sans-serif;
   padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  background-color: #ffffff; /* Cambiado a blanco para un aspecto más limpio */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
 }
 
 .atm-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f5f5f5;
-  padding: 10px 20px;
+  background-color: white; /* Color de fondo más atractivo */
+  color: white; /* Color del texto en blanco */
+  padding: 15px 20px;
+  border-radius: 10px 10px 0 0; /* Bordes redondeados en la parte superior */
 }
 
 .menu button {
   margin-right: 15px;
+  background-color: #f1f1f1; /* Color de fondo de los botones */
+  border: none;
+  border-radius: 5px; /* Bordes redondeados en botones */
+  padding: 10px 15px; /* Espaciado interno */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
 }
 
 .logout-button {
   background-color: red;
   color: white;
+  border-radius: 5px; /* Bordes redondeados */
 }
 
 .card-info {
@@ -27,6 +40,7 @@
   background-color: #f0f8ff;
   padding: 15px;
   border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
 }
 
 .card-details {
@@ -37,10 +51,21 @@
 
 .balance-section h3 {
   font-size: 24px;
+  color: #333; /* Color más oscuro para el texto */
 }
 
 .atm-buttons .atm-button {
   margin-right: 10px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff; /* Color de fondo azul */
+  color: white; /* Texto en blanco */
+  cursor: pointer;
+}
+
+.atm-buttons .atm-button:hover {
+  background-color: #0056b3; /* Color más oscuro al pasar el ratón */
 }
 
 .tabs-container {
@@ -54,4 +79,10 @@
   background-color: #e0e0e0;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.chart-container {
+  width: 300px; /* Cambia esto al tamaño que desees */
+  height: 200px; /* Cambia esto al tamaño que desees */
+  margin: 0 auto; /* Centra el gráfico horizontalmente */
 }

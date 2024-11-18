@@ -1,0 +1,16 @@
+.star-rating {
+    display: flex;
+    cursor: pointer;
+    font-size: 2rem; /* Adjust size as needed */
+    margin-bottom: 10px; /* Space between stars and comment */
+  }
+  
+  .star {
+    color: lightgray; /* Default color */
+    transition: color 0.2s;
+  }
+  
+  .star.filled {
+    color: gold; /* Color when filled */
+  }
+  
