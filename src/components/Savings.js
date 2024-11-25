@@ -14,6 +14,8 @@ const Savings = () => {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [transactionCount, setTransactionCount] = useState(0);
+  const transactionLimit = 12;
 
   const fetchTransactions = useCallback(async () => {
     try {
@@ -33,6 +35,17 @@ const Savings = () => {
     }
   }, [userEmail]);
 
+  const fetchTransactionCount = useCallback(async () => {
+    try {
+      const response = await axios.get(`https://localhost:7243/api/users/savingsTransactionCount`, {
+        params: { email: userEmail },
+      });
+      setTransactionCount(response.data.count);
+    } catch (err) {
+      setError(err.response?.data?.title || 'Error fetching transaction count');
+    }
+  }, [userEmail]);
+
   useEffect(() => {
     if (!userEmail) {
       setError('User email not found.');
@@ -40,13 +53,26 @@ const Savings = () => {
     }
     fetchTransactions();
     fetchBalance();
-  }, [userEmail, fetchTransactions, fetchBalance]);
+    fetchTransactionCount(); 
+  }, [userEmail, fetchTransactions, fetchBalance, fetchTransactionCount]);
 
   const handleTransferToChecking = async () => {
+    const transactionCountResponse = await axios.get(`https://localhost:7243/api/users/savingsTransactionCount`, {
+      params: { email: userEmail },
+    });
+
+     // Límite de transacciones mensuales
+    const currentTransactionCount = transactionCountResponse.data.count;
+
+    if (currentTransactionCount >= transactionLimit) {
+      alert('You have reached the transaction limit for this month.');      
+      return;
+    }
+
     const transferAmount = parseFloat(amount);
 
     if (isNaN(transferAmount) || transferAmount <= 0 || transferAmount > currentBalance) {
-      setError('Invalid transfer amount. Please enter a valid amount within your balance.');
+      alert('Invalid transfer amount. Please enter a valid amount within your balance.');
       return;
     }
 
@@ -62,9 +88,10 @@ const Savings = () => {
 
         await fetchBalance();
         await fetchTransactions();
+        await fetchTransactionCount();
 
         setAmount('');
-        setError(null);
+        alert('Transfer successful!');
       } catch (err) {
         setError(err.response?.data?.title || 'Error transferring funds');
       }
@@ -110,7 +137,16 @@ const Savings = () => {
       <h1>Savings Account</h1>
       <h2>Account Balance: ${Number.isFinite(currentBalance) ? currentBalance.toFixed(2) : 'Loading...'}</h2>
       
-      {error && <div className="error-message">{error}</div>} {/* Mostrar mensaje de error */}
+      <div className="transaction-info">
+        <h3>Transaction Info</h3>
+        <p>Transactions this month: {transactionCount}/{transactionLimit}</p>
+        {transactionCount >= transactionLimit && (
+          <p className="alert-message">
+            <strong>Alert:</strong> You have reached your monthly transaction limit!
+          </p>
+        )}
+      </div>
+      {error && <div className="error-message">{error}</div>}
 
       <div className="transaction-section">
         <h3>Transaction History</h3>

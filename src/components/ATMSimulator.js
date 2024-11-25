@@ -15,7 +15,9 @@ const ATMSimulator = () => {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [checkingBalance, setCheckingBalance] = useState(0);
   const [savingsBalance, setSavingsBalance] = useState(0);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);  // Nuevo estado
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,9 +70,11 @@ const ATMSimulator = () => {
     navigate(path);
   };
 
-  const toggleProfileDropdown = () => {
-    setShowProfileDropdown((prev) => !prev); 
+  const toggleDropdown = (dropdown) => {
+    // Si el dropdown ya está abierto, lo cerramos, de lo contrario, lo abrimos
+    setOpenDropdown((prev) => (prev === dropdown ? null : dropdown));
   };
+  
 
   const handleLogout = () => {
     const confirmation = window.confirm('Are you sure you want to log out?');
@@ -126,10 +130,13 @@ const ATMSimulator = () => {
         </div>
 
         <div className="profile-dropdown-container">
-          <button className="profile-button" onClick={toggleProfileDropdown}>
-            Profile and Preferences
+          <button className="financial-goals-button" onClick={() => handleRedirect('/FinancialGoals')}>
+            Financial Goals
           </button>
-          {showProfileDropdown && (
+          <button className="profile-button"onClick={() => toggleDropdown('profile')}>
+          Profile and Preferences
+          </button>
+          {openDropdown === 'profile' && (
             <motion.div className="profile-dropdown" variants={item}>
               <ul>
                 <motion.li variants={item}>
@@ -139,7 +146,7 @@ const ATMSimulator = () => {
                   <button onClick={() => handleRedirect('/security')}>Security and password</button>
                 </motion.li>
                 <motion.li variants={item}>
-                  <button onClick={() => handleRedirect('/Feedback')}>Feedback</button>
+                  <button onClick={() => handleRedirect('/FeedbacknIssueReports')}>Feedback and Issue Reports</button>
                 </motion.li>
                 <motion.li variants={item}>
                 <button onClick={() => handleRedirect('/RecentActivity', { state: { email: userEmail } })}>
@@ -150,6 +157,29 @@ const ATMSimulator = () => {
               </ul>
             </motion.div>
           )}
+          <button className="learning-button" onClick={() => toggleDropdown('learning')}>
+          Learning
+          </button>
+          {openDropdown === 'learning' && (
+            <motion.div className="learning-dropdown" variants={item}>
+              <ul>
+                <motion.li variants={item}>
+                  <button onClick={() => handleRedirect('/TransactionGlossary')}>Transaction Glossary</button>
+                </motion.li>
+                <motion.li variants={item}>
+                <button onClick={() => {
+                  const userConfirmed = window.confirm("You are about to be redirected to a PDF on Financial Literacy. Do you wish to continue?");
+                  if (userConfirmed) {
+                    window.open('https://lincs.ed.gov/sites/default/files/TSTMFinancLiterBrief-rev-508.pdf', '_blank');
+                  }
+                }}>
+                  Financial Literacy
+                </button>
+                </motion.li>
+              </ul>
+            </motion.div>
+          )}
+        
         </div>
 
         <button className="logout-button" onClick={handleLogout}>Log out</button>

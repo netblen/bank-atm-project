@@ -69,5 +69,4 @@ using System.ComponentModel.DataAnnotations;
         public string SecurityAnswer { get; set; } 
         public string NewPassword { get; set; }
     }
-
 }

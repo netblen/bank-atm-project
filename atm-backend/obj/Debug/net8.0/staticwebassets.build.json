@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "dbFNZGSxVgkkpPVYCVgasTVgAlap4CIFKqwtbZB5fmw=",
+  "Hash": "Sa1eXJAnLwXiJ3vTo44i091vmigYpKzWDWZU0okT/cg=",
   "Source": "atm-backend",
   "BasePath": "_content/atm-backend",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

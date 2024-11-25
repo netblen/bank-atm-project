@@ -1,78 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { useUser } from './UserContext';
+import './RecentActivity.css';
+import withAutoLogout from './withAutoLogout';
 
 const RecentActivity = () => {
   const [activity, setActivity] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); 
-  const location = useLocation();
-  const { email } = location.state || {}; // Obtiene el email de location.state
+  const { userEmail } = useUser();
 
-  console.log('Email in RecentActivity:', email);
-  
+  const fetchRecentActivity = useCallback(async () => {
+    try {
+      const response = await axios.get(`https://localhost:7243/api/Users/recent-activity?email=${userEmail}`);
+      const activitiesWithReadStatus = response.data.$values.map((item) => ({
+        ...item,
+        isRead: item.isRead || false, // Asume que el backend envía este dato
+      }));
+      setActivity(activitiesWithReadStatus);
+    } catch (err) {
+      setError(err.response?.data?.title || 'Error fetching data');
+    }
+  }, [userEmail]);
+
+  const handleMarkAsRead = async (index, isRead) => {
+    try {
+      const updatedActivity = [...activity];
+      updatedActivity[index].isRead = isRead;
+      await axios.put(`https://localhost:7243/api/Users/mark-activity`, {
+        id: updatedActivity[index].id,
+        isRead,
+      });
+
+      setActivity(updatedActivity);
+    } catch (err) {
+      setError(err.response?.data?.title || 'Error updating activity');
+    }
+  };
+
   useEffect(() => {
-    const fetchActivity = async () => {
-      console.log('Fetching activity...'); // Log de inicio de la carga
-      
-      if (!email) {
-        setError('Email is required to fetch recent activity.');
-        setLoading(false); // Finaliza la carga si no hay email
-        console.log('No email found. Error message set.');
-        return;
-      }
-
-      try {
-        console.log('Making API request with email:', email);
-        const response = await axios.get(`https://localhost:7243/api/Users/recent-activity?email=${email}`);
-        console.log('API response:', response.data);
-
-        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-          setActivity(response.data); // Actualiza el estado con los datos
-          console.log('Activity data set:', response.data);
-        } else {
-          setError('No recent activity available.');
-          console.log('No recent activity available.');
-        }
-      } catch (error) {
-        setError('Error fetching activity.');
-        console.error('Error fetching activity:', error.response ? error.response : error.message);
-        console.log('Error:', error.response ? error.response : error.message);
-      } finally {
-        setLoading(false); // Finaliza la carga
-        console.log('Data fetching finished');
-      }
-    };
-
-    fetchActivity();
-  }, [email]); // La llamada a la API solo se hace cuando email cambia
-
-  if (loading) {
-    console.log('Loading data...');
-    return <div>Loading recent activity...</div>;
-  }
-
-  console.log('Render activity:', activity);
+    if (!userEmail) {
+      setError('User email not found.');
+      return;
+    }
+    fetchRecentActivity();
+  }, [userEmail, fetchRecentActivity]);
 
   return (
-    <div>
-      <h1>Recent Activity</h1>
+    <div className="recent-activity-container">
+      <h1>Recent Notifications</h1>
       {error && <div className="error-message">{error}</div>}
       {activity.length > 0 ? (
-        <ul>
+        <ul className="notification-list">
           {activity.map((item, index) => (
-            <li key={index}>
-              <p>{new Date(item.date).toLocaleString() || 'Invalid date'}</p>
-              <p>{item.description}</p>
-              <p>Amount: ${item.amount}</p>
+            <li
+              key={index}
+              className={`notification-item ${item.isRead ? 'read' : 'unread'}`}
+            >
+              <div className="notification-content">
+                <span className="notification-date">{new Date(item.activityDate).toLocaleString()}</span>
+                <span className="notification-type">{item.activityType}</span>
+                <span className="notification-amount">${item.amount.toFixed(2)}</span>
+              </div>
+              <button
+                className="mark-read-button"
+                onClick={() => handleMarkAsRead(index, !item.isRead)}
+              >
+                {item.isRead ? 'Mark as Unread' : 'Mark as Read'}
+              </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p>No recent activity available.</p>
+        <p>No recent activity found.</p>
       )}
     </div>
   );
 };
 
-export default RecentActivity;
+export default withAutoLogout(RecentActivity);

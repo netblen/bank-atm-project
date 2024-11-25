@@ -137,3 +137,6 @@ C:\Users\Administrator\Desktop\Project\bank-atm-project\atm-backend\obj\Debug\ne
 C:\Users\Administrator\Desktop\Project\bank-atm-project\atm-backend\obj\Debug\net8.0\atm-backend.genruntimeconfig.cache
 C:\Users\Administrator\Desktop\Project\bank-atm-project\atm-backend\obj\Debug\net8.0\ref\atm-backend.dll
 C:\Users\Administrator\Desktop\Project\bank-atm-project\atm-backend\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\Administrator\Desktop\Project\bank-atm-project\atm-backend\bin\Debug\net8.0\atm-backend.staticwebassets.endpoints.json
+C:\Users\Administrator\Desktop\Project\bank-atm-project\atm-backend\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\Administrator\Desktop\Project\bank-atm-project\atm-backend\obj\Debug\net8.0\staticwebassets\msbuild.atm-backend.Microsoft.AspNetCore.StaticWebAssetEndpoints.props

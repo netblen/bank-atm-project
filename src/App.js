@@ -16,7 +16,7 @@ import UserEdit from './components/UserEdit';
 import SecurityPassword from './components/SecurityPassword';
 import AlertService from './components/AlertService';
 import { UserProvider } from './components/UserContext';
-import Feedback from './components/Feedback';
+import FeedbacknIssueReports from './components/FeedbacknIssueReports';
 import UserTable from './components/UserTable';
 import ActivityLog from './components/ActivityLog';
 import EditUserAdmin from './components/EditUserAdmin';
@@ -24,6 +24,8 @@ import SystemPerformanceDashboard from './components/SystemPerformanceDashboard'
 import ScheduleAppointment from './components/ScheduleAppointment';
 import RateCustomerExperience from './components/RateCustomerExperience';
 import RecentActivity from './components/RecentActivity';
+import FinancialGoals from "./components/FinancialGoals";
+import TransactionGlossary from "./components/TransactionGlossary"
 
 const App = () => {
   return (
@@ -49,9 +51,11 @@ const App = () => {
           <Route path="/checking" element={<Checking />} /> 
           <Route path="/savings" element={<Savings />} />
           <Route path="/UserEdit" element={<UserEdit />} />
-          <Route path="/Feedback" element={<Feedback />} />
+          <Route path="/FeedbacknIssueReports" element={<FeedbacknIssueReports />} />
           <Route path="/security" element={<SecurityPassword />} />
           <Route path="/alert-service" element={<AlertService />} />
+          <Route path="/FinancialGoals" element={<FinancialGoals userId={1} />} />
+          <Route path="/TransactionGlossary" element={<TransactionGlossary />} />
         </Routes>
       </Router>
     </UserProvider>

@@ -66,7 +66,13 @@ namespace atm_backend.Data.Models
 
         public decimal Amount { get; set; }
 
-        public DateTime ActivityDate  { get; set; } 
+        public DateTime ActivityDate  { get; set; }
+        public bool IsRead { get; set; }
+    }
+    public class ActivityUpdateRequest
+    {
+        public int Id { get; set; }
+        public bool IsRead { get; set; }
     }
 
     public class Appointment
@@ -107,6 +113,8 @@ namespace atm_backend.Data.Models
         public int Id { get; set; }
         public string Email { get; set; }
         public string Comments { get; set; }
+        public string Type { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 
     //Customer Feedback
@@ -115,6 +123,17 @@ namespace atm_backend.Data.Models
         public int Id { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; }
+    }
+
+    //Financial
+    public class FinancialGoal
+    {
+        public int goal_id { get; set; }
+        public int user_id { get; set; }
+        public string GoalName { get; set; }
+        public decimal target_amount { get; set; }
+        public DateTime due_date { get; set; }
+        public DateTime created_at { get; set; }
     }
 
 }

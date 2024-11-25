@@ -118,8 +118,7 @@ namespace atm_backend.Controllers
             }
             var transactions = await _context.SavingsTransactions
                 .Where(t => t.user_id == user.Id)
-                     .OrderByDescending(t => t.Id) 
-       
+                .OrderByDescending(t => t.Id) 
                 .ToListAsync();
             if (!transactions.Any())
             {
@@ -140,6 +139,24 @@ namespace atm_backend.Controllers
                 .SumAsync(t => t.Balance);
 
             return Ok(new { Balance = balance });
+        }
+        [HttpGet("savingsTransactionCount")]
+        public async Task<IActionResult> GetSavingsTransactionCount(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var startOfMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+            var transactionCount = await _context.SavingsTransactions
+                .Where(t => t.user_id == user.Id && t.TransactionDate >= startOfMonth && t.TransactionDate <= endOfMonth)
+                .CountAsync();
+
+            return Ok(new { Count = transactionCount });
         }
 
         //Checking
@@ -189,6 +206,21 @@ namespace atm_backend.Controllers
         public async Task<ActionResult<IEnumerable<UserActivityLogs>>> GetUserActivityLogs()
         {
             return await _context.UserActivityLogs.ToListAsync();
+        }
+
+        [HttpPut("mark-activity")]
+        public IActionResult MarkActivity([FromBody] ActivityUpdateRequest request)
+        {
+            var activity = _context.UserActivityLogs.FirstOrDefault(a => a.Id == request.Id);
+            if (activity == null)
+            {
+                return NotFound(new { title = "Activity not found" });
+            }
+
+            activity.IsRead = request.IsRead;
+            _context.SaveChanges();
+
+            return Ok(new { message = "Activity updated successfully" });
         }
 
         [HttpGet("recent-activity")]
@@ -347,20 +379,17 @@ namespace atm_backend.Controllers
             {
                 return NotFound(new { message = "User not found" });
             }
-
             // Verificar la contraseña proporcionada
             if (!VerifyPassword(userDto.Password, user.Password))
             {
                 return BadRequest(new { message = "Incorrect password" });
             }
-
             // Actualizar solo los campos permitidos
             user.City = userDto.City;
             user.postal_code = userDto.PostalCode;
             user.Profession = userDto.Profession;
             user.security_question = userDto.SecurityQuestion;
             user.security_answer = userDto.SecurityAnswer;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -371,12 +400,8 @@ namespace atm_backend.Controllers
                 return StatusCode(500, new { message = "Error updating user", details = ex.Message });
             }
         }
-
-        // Método para verificar la contraseña (implementa un mecanismo seguro)
         private bool VerifyPassword(string inputPassword, string storedPasswordHash)
         {
-            // Aquí puedes implementar la lógica para verificar la contraseña (hash, bcrypt, etc.)
-            // Ejemplo simple: compara directamente, pero se recomienda usar un algoritmo de hash seguro
             return inputPassword == storedPasswordHash;
         }
 
@@ -408,12 +433,10 @@ namespace atm_backend.Controllers
                     u.rol
                 })
                 .FirstOrDefaultAsync();
-
             if (user == null)
             {
                 return NotFound("User not found.");
             }
-
             return Ok(user);
         }
 
@@ -429,9 +452,7 @@ namespace atm_backend.Controllers
             {
                 return BadRequest("Reason must be less than 100 words.");
             }
-
             appointment.CreatedAt = DateTime.UtcNow;
-
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
@@ -440,17 +461,22 @@ namespace atm_backend.Controllers
 
         //Feedback
         [HttpPost("Feedback")]
-        public async Task<IActionResult> SubmitFeedback([FromBody] Feedback feedback)
+        public async Task<IActionResult> SubmitFeedback([FromBody] Feedback request)
         {
-            if (feedback == null || string.IsNullOrWhiteSpace(feedback.Comments))
+            if (request == null || string.IsNullOrWhiteSpace(request.Comments))
             {
-                return BadRequest("Invalid feedback data.");
+                return BadRequest("Invalid data.");
             }
-
+            var feedback = new Feedback
+            {
+                Email = request.Email,
+                Comments = request.Comments,
+                Type = request.Type,
+                CreatedAt = DateTime.UtcNow
+            };
             _context.Feedbacks.Add(feedback);
             await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Feedback received!" });
+            return Ok(new { message = request.Type == "feedback" ? "Feedback received!" : "Issue reported!" });
         }
 
         //Rate
@@ -461,10 +487,64 @@ namespace atm_backend.Controllers
             {
                 return BadRequest("Invalid feedback.");
             }
-
             _context.CustomerFeedbacks.Add(feedback);
             await _context.SaveChangesAsync();
             return Ok();
+        }
+
+        //
+        [HttpPost("creategoal")]
+        public async Task<IActionResult> CreateGoal([FromBody] FinancialGoal goal)
+        {
+            var user = await _context.Users.FindAsync(goal.user_id);
+            if (user == null)
+            {
+                return NotFound($"User with ID {goal.user_id} not found.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (goal.target_amount <= 0)
+            {
+                return BadRequest("Target amount must be greater than zero.");
+            }
+            _context.FinancialGoals.Add(goal);
+            await _context.SaveChangesAsync();
+            return Ok(new
+            {
+                message = "Financial goal created successfully.",
+                data = goal
+            });
+        }
+        //Financial Goals
+        [HttpGet("financial-userId")]
+        public async Task<IActionResult> GetGoals(int userId)
+        {
+            var goals = await _context.FinancialGoals
+                .Where(g => g.user_id == userId)
+                .ToListAsync();
+            return Ok(goals);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateGoal(int id, [FromBody] FinancialGoal updatedGoal)
+        {
+            var goal = await _context.FinancialGoals.FindAsync(id);
+            if (goal == null) return NotFound();
+            goal.GoalName = updatedGoal.GoalName;
+            goal.target_amount = updatedGoal.target_amount;
+            goal.due_date = updatedGoal.due_date;
+            await _context.SaveChangesAsync();
+            return Ok(goal);
+        }
+        [HttpDelete("deletefinancial-id")]
+        public async Task<IActionResult> DeleteGoal(int id)
+        {
+            var goal = await _context.FinancialGoals.FindAsync(id);
+            if (goal == null) return NotFound();
+            _context.FinancialGoals.Remove(goal);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

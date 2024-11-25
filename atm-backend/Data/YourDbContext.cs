@@ -22,11 +22,12 @@ namespace atm_backend.Data
         public DbSet<Feedback> Feedbacks { get; set; }
         //Customer
         public DbSet<CustomerFeedback> CustomerFeedbacks { get; set; }
+        //Goals
+        public DbSet<FinancialGoal> FinancialGoals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<CheckingsAccount>()
                 .HasKey(c => c.checking_account_id);
 
@@ -53,7 +54,11 @@ namespace atm_backend.Data
             
             modelBuilder.Entity<UserActivityLogs>()
                 .HasKey(c => c.Id);
-            
+                
+            modelBuilder.Entity<FinancialGoal>(entity =>
+            {
+                entity.HasKey(e => e.goal_id); 
+            });
         }
     }
 }

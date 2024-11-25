@@ -1,0 +1,70 @@
+.container {
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1em;
+  }
+  
+  .alphabet-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .alphabet-button {
+    padding: 10px;
+    font-size: 1.2em;
+    background-color: #000000;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .alphabet-button:hover {
+    background-color: #ddd;
+  }
+  
+  .alphabet-button.selected {
+    background-color: #000000;
+    color: white;
+  }
+  
+  .terms-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .term {
+    border: 1px solid #ccc;
+    padding: 15px;
+    width: 200px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .term-title {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .term-description {
+    font-size: 1em;
+  }
+  
+  .no-results {
+    color: #ff0000;
+    font-size: 1.2em;
+  }
+  

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from './UserContext';
 import { useNavigate } from 'react-router-dom';
-import './Feedback.css';
+import './FeedbacknIssueReports.css';
 import withAutoLogout from './withAutoLogout';
 import { motion } from 'framer-motion';
 
@@ -10,6 +10,7 @@ const Feedback = () => {
   const { userEmail } = useUser();
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState('');
+  const [issueType, setIssueType] = useState('feedback'); // 'feedback' or 'technical-issue'
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -20,27 +21,36 @@ const Feedback = () => {
     setErrorMessage('');
     setSuccessMessage('');
 
-    // Basic validation
-    if (feedback.trim().length < 10) { 
+    if (feedback.trim().length < 10) {
       setErrorMessage('The comment must be at least 10 characters long.');
       setLoading(false);
       return;
     }
 
     try {
-      // Sending feedback to the server
       await axios.post('https://localhost:7243/api/Users/Feedback', {
         email: userEmail,
         comments: feedback,
+        type: issueType,
       });
-      setSuccessMessage('Feedback submitted successfully!');
-      setFeedback(''); // Clear the feedback field
-      navigate('/atm-simulator'); // Navigate to the ATM simulator page
+
+      setSuccessMessage(
+        issueType === 'feedback' 
+          ? 'Feedback submitted successfully!' 
+          : 'Technical issue reported successfully!'
+      );
+      alert(
+        issueType === 'feedback' 
+          ? 'Thank you for your feedback!' 
+          : 'Your technical issue has been reported!'
+      );
+      setFeedback('');
+      navigate('/atm-simulator');
     } catch (error) {
-      console.error('Error submitting feedback:', error);
-      setErrorMessage('Error sending feedback: ' + (error.response?.data?.message || error.message));
+      console.error('Error submitting:', error);
+      setErrorMessage('Error sending: ' + (error.response?.data?.message || error.message));
     } finally {
-      setLoading(false); // Set loading state back to false
+      setLoading(false);
     }
   };
 
@@ -52,8 +62,19 @@ const Feedback = () => {
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.5 }}
     >
-      <h2>Send Your Feedback</h2>
+      <h2>Send Your Feedback or Report an Issue</h2>
       <form onSubmit={handleSubmit}>
+        <label>
+          <select
+            value={issueType}
+            onChange={(e) => setIssueType(e.target.value)}
+            required
+          >
+            <option value="feedback">Feedback</option>
+            <option value="technical-issue">Report Technical Issue</option>
+          </select>
+        </label>
+
         <motion.textarea
           name="feedback"
           value={feedback}
@@ -64,6 +85,7 @@ const Feedback = () => {
           whileFocus={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
         />
+
         <motion.button
           type="submit"
           disabled={loading}
@@ -71,8 +93,9 @@ const Feedback = () => {
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.2 }}
         >
-          {loading ? 'Sending...' : 'Submit Feedback'}
+          {loading ? 'Sending...' : 'Submit'}
         </motion.button>
+
         {errorMessage && (
           <motion.div 
             className="message error"
