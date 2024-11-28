@@ -69,4 +69,17 @@ using System.ComponentModel.DataAnnotations;
         public string SecurityAnswer { get; set; } 
         public string NewPassword { get; set; }
     }
+
+    public class SurveyResponse
+    {
+        public int Id { get; set; }
+        public int user_id { get; set; }
+        public int satisfaction_level { get; set; }
+        public int usage_frequency { get; set; }
+        public int location_convenience { get; set; }
+        public string frequently_used_services { get; set; }
+        public int transaction_speed_satisfaction { get; set; }
+        public DateTime submitted_at { get; set; }
+    }
+    
 }

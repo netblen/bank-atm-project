@@ -28,9 +28,15 @@ const AboutPage = () => {
     navigate('/schedule-appointment');
   };
 
+  const handleLocator = () => {
+    navigate('/Locator');
+  };
+
   const handleRateCustomerExperience = () => {
     navigate('/rate-customer-experience'); // Asegúrate de que esta ruta esté definida en tu router
   };
+
+
 
   return (
     <div style={{ padding: '20px' }}>
@@ -65,6 +71,9 @@ const AboutPage = () => {
 
       <button onClick={handleRateCustomerExperience} className="rate-button">
         Rate Your Customer Experience
+      </button>
+      <button onClick={handleLocator} className="map-button">
+        Map
       </button>
     </div>
   );

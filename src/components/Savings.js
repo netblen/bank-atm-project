@@ -99,19 +99,36 @@ const Savings = () => {
   };
 
   const handleFilter = async () => {
-    try {
-      const response = await axios.get('https://localhost:7243/api/ATM/filterTransactionsByDateSavings', {
-        params: {
-          email: userEmail,
-          startDate,
-          endDate,
-        },
-      });
-      setTransactions(response.data.$values || []);
-    } catch (error) {
-      console.error("Error fetching transactions:", error);
+    if (!startDate || !endDate) {
+      // Si no hay fechas, recargar todas las transacciones
+      fetchTransactions();
+      setError(null);  // Limpiar cualquier error
+    } else {
+      try {
+        const response = await axios.get('https://localhost:7243/api/ATM/filterTransactionsByDateSavings', {
+          params: {
+            email: userEmail,
+            startDate,
+            endDate,
+          },
+        });
+        const filteredTransactions = response.data.$values || [];
+        setTransactions(filteredTransactions);
+    
+        // Si no hay transacciones después del filtrado, mostramos el mensaje
+        if (filteredTransactions.length === 0) {
+          setError('There are no transactions to display for the date range you selected. Please select another date range.');
+        } else {
+          setError(null); // Limpiar el mensaje de error si hay transacciones
+        }
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+        setError('An error occurred while fetching transactions.');
+      }
     }
   };
+  
+  
 
   const exportToCSV = () => {
     const csvData = transactions.map(transaction => ({
@@ -168,6 +185,13 @@ const Savings = () => {
           Export to CSV
         </button>
       </div>
+      {/* Aquí mostramos un mensaje si no hay transacciones */}
+      {transactions.length === 0 && !error && (
+        <p className="no-transactions-message">
+          There are no transactions to display for the date range you selected. Please select another date range.
+        </p>
+      )}
+
       <table>
         <thead>
           <tr>

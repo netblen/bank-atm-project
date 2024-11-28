@@ -24,6 +24,8 @@ namespace atm_backend.Data
         public DbSet<CustomerFeedback> CustomerFeedbacks { get; set; }
         //Goals
         public DbSet<FinancialGoal> FinancialGoals { get; set; }
+        //Survey
+        public DbSet<SurveyResponse> SurveyResponses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

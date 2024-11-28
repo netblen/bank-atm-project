@@ -153,6 +153,11 @@ const ATMSimulator = () => {
                   Recent Activity
                 </button>
                 </motion.li>
+                <motion.li variants={item}>
+                <button onClick={() => handleRedirect('/Survey')}>
+                  Survey
+                </button>
+                </motion.li>
 
               </ul>
             </motion.div>

@@ -546,5 +546,26 @@ namespace atm_backend.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        //survey
+        [HttpPost("survey-yes")]
+        public async Task<IActionResult> SaveSurveyResponse(int userId, int satisfactionLevel, int usageFrequency, int locationConvenience, string frequentlyUsedServices, int transactionSpeedSatisfaction)
+        {
+            var surveyResponse = new SurveyResponse
+            {
+                user_id = userId,
+                satisfaction_level = satisfactionLevel,
+                usage_frequency = usageFrequency,
+                location_convenience = locationConvenience,
+                frequently_used_services = frequentlyUsedServices,
+                transaction_speed_satisfaction = transactionSpeedSatisfaction,
+                submitted_at = DateTime.Now
+            };
+
+            _context.SurveyResponses.Add(surveyResponse);
+            await _context.SaveChangesAsync();
+
+            return Ok("Survey response saved successfully.");
+        }
+        
     }
 }
