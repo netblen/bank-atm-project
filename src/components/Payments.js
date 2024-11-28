@@ -4,7 +4,6 @@ import './Payments.css';
 import axios from 'axios';
 import withAutoLogout from './withAutoLogout';
 
-
 const Payments = () => {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [accountId, setAccountId] = useState('');
@@ -69,7 +68,7 @@ const Payments = () => {
 
   return (
     <div className="payment-container">
-      <h1>Bill Payment Simulator</h1>
+      <h1>Bill Payment</h1>
       <form className="payment-form">
         <div className="form-group">
           <label htmlFor="accountId">Only from your Checking account you can pay!</label>

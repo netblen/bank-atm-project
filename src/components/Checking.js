@@ -109,17 +109,32 @@ const Checking = () => {
   };
 
   const handleFilter = async () => {
-    try {
-      const response = await axios.get('https://localhost:7243/api/ATM/filterTransactionsByDateChecking', {
-        params: {
-          email: userEmail,
-          startDate,
-          endDate,
-        },
-      });
-      setTransactions(response.data.$values || []);
-    } catch (error) {
-      console.error("Error fetching transactions:", error);
+    if (!startDate || !endDate) {
+      // Si no hay fechas, recargar todas las transacciones
+      fetchTransactions();
+      setError(null);  // Limpiar cualquier error
+    } else {
+      try {
+        const response = await axios.get('https://localhost:7243/api/ATM/filterTransactionsByDateChecking', {
+          params: {
+            email: userEmail,
+            startDate,
+            endDate,
+          },
+        });
+        const filteredTransactions = response.data.$values || [];
+        setTransactions(filteredTransactions);
+    
+        // Si no hay transacciones después del filtrado, mostramos el mensaje
+        if (filteredTransactions.length === 0) {
+          setError('There are no transactions to display for the date range you selected. Please select another date range.');
+        } else {
+          setError(null); // Limpiar el mensaje de error si hay transacciones
+        }
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+        setError('An error occurred while fetching transactions.');
+      }
     }
   };
 

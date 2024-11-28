@@ -1,0 +1,133 @@
+/* Estilos específicos para la página de la encuesta */
+
+/* Contenedor principal */
+.survey-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-top: 50px;
+  }
+  
+  .survey-container h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Mensajes de error y éxito */
+  .survey-container .error-message,
+  .survey-container .success-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .survey-container .error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  .survey-container .success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  /* Estilos del formulario */
+  .survey-container form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .survey-container .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .survey-container label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .survey-container select,
+  .survey-container button {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    width: 100%;
+    transition: border-color 0.3s ease;
+  }
+  
+  .survey-container select:focus,
+  .survey-container button:focus {
+    border-color: #0056b3;
+    outline: none;
+  }
+  
+  .survey-container button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .survey-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .survey-container button:active {
+    background-color: #004085;
+  }
+  
+  /* Estilo para los checkboxes */
+  .survey-container .form-group div {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .survey-container .form-group label {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .survey-container .form-group input[type="checkbox"] {
+    margin-right: 5px;
+    accent-color: #007bff;
+  }
+  
+  .survey-container .form-group input[type="checkbox"]:hover {
+    accent-color: #0056b3;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .survey-container {
+      padding: 15px;
+    }
+  
+    .survey-container h1 {
+      font-size: 1.5rem;
+    }
+  
+    .survey-container .form-group {
+      margin-bottom: 15px;
+    }
+  
+    .survey-container select,
+    .survey-container button {
+      font-size: 0.9rem;
+    }
+  }
+  
