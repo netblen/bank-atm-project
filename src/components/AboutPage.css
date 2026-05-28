@@ -1,0 +1,56 @@
+/* FAQ Item Styles */
+.faq-item {
+    margin: 15px 0;
+  }
+  
+  /* Question Styles */
+  .faq-question {
+    font-size: 1.5rem;
+    color: #007bff;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .faq-question:hover {
+    color: #0056b3;
+  }
+  
+  /* Answer Styles */
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+    opacity: 0;
+  }
+  
+  .faq-answer.open {
+    max-height: 100px; /* Ajusta según el contenido */
+    opacity: 1;
+  }
+  
+  /* Responsive Design for FAQs */
+  @media (max-width: 600px) {
+    .faq-question {
+      font-size: 1.2rem;
+    }
+  
+    .faq-answer {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .schedule-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .schedule-button:hover {
+    background-color: #218838;
+  }
+  

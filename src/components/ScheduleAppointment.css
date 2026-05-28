@@ -1,0 +1,66 @@
+.schedule-appointment {
+  max-width: 400px; 
+  margin: 20px auto; 
+  padding: 20px; 
+  border: 1px solid #ddd; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+  background-color: #ffffff; /* Changed to white for a cleaner look */
+  transition: transform 0.3s; /* Smooth scale effect on hover */
+}
+
+.schedule-appointment:hover {
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.schedule-appointment h2 {
+  text-align: center; 
+  margin-bottom: 20px; 
+  font-size: 24px; /* Increase font size for better readability */
+  color: #333; /* Darker color for the title */
+}
+
+.schedule-appointment input[type="email"],
+.schedule-appointment input[type="datetime-local"],
+.schedule-appointment textarea {
+  width: 100%; 
+  padding: 12px; /* Slightly larger padding */
+  margin: 10px 0; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  font-size: 16px; 
+  box-sizing: border-box; 
+  transition: border-color 0.3s; /* Transition for focus effect */
+}
+
+.schedule-appointment input[type="email"]:focus,
+.schedule-appointment input[type="datetime-local"]:focus,
+.schedule-appointment textarea:focus {
+  border-color: #007bff; /* Highlight border on focus */
+}
+
+.schedule-appointment textarea {
+  height: 100px; 
+  resize: none; 
+}
+
+.schedule-appointment button {
+  width: 100%; 
+  padding: 12px; /* Slightly larger padding */
+  background-color: #007bff; 
+  color: white; 
+  border: none; 
+  border-radius: 4px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  transition: background-color 0.3s, transform 0.2s; /* Added transition for transform */
+}
+
+.schedule-appointment button:hover {
+  background-color: #0056b3; 
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+.schedule-appointment button:focus {
+  outline: none; 
+}

@@ -1,0 +1,36 @@
+/* styles.css */
+.dashboard-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f8f9fa; /* Fondo claro */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.dashboard-container h2 {
+    text-align: center;
+    color: #343a40; /* Color de texto oscuro */
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.metric {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom: 1px solid #dee2e6; /* Línea divisoria */
+}
+
+.metric:last-child {
+    border-bottom: none; /* Quitar la línea del último elemento */
+}
+
+.metric strong {
+    color: #495057; /* Color de texto más oscuro */
+}
+
+.metric-value {
+    color: #28a745; /* Color verde para los valores */
+    font-weight: bold;
+}

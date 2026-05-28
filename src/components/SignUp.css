@@ -1,0 +1,65 @@
+.auth-form {
+  max-width: 400px; /* Ancho máximo para evitar que sea muy amplio */
+  margin: 0 auto; /* Centrar en la pantalla */
+  padding: 20px; /* Espaciado interno para darle aire al contenido */
+  border: 1px solid #ddd; /* Bordes sutiles */
+  border-radius: 8px; /* Bordes redondeados para una apariencia moderna */
+  background-color: #f9f9f9; /* Color de fondo claro */
+}
+
+.auth-form h2 {
+  text-align: center; /* Título centrado */
+}
+
+.auth-form div {
+  margin-bottom: 15px; /* Espaciado entre cada campo */
+}
+
+.auth-form label {
+  display: block; /* Etiquetas en bloque */
+  margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+}
+
+.auth-form input,
+.auth-form select {
+  width: 100%; /* Hacer que los campos ocupen todo el ancho disponible */
+  padding: 10px; /* Espaciado interno en los campos */
+  border: 1px solid #ccc; /* Bordes sutiles */
+  border-radius: 4px; /* Bordes ligeramente redondeados */
+  box-sizing: border-box; /* Asegura que el padding se incluya dentro del ancho total */
+}
+
+.auth-form button {
+  width: 100%; /* Botón que ocupa todo el ancho */
+  padding: 10px; /* Espaciado interno */
+  background-color: #007bff; /* Color azul predeterminado */
+  color: white; /* Texto en blanco */
+  border: none; /* Eliminar el borde predeterminado */
+  border-radius: 4px; /* Bordes ligeramente redondeados */
+  cursor: pointer; /* Cambiar cursor al estilo de puntero al pasar por encima */
+  transition: background-color 0.3s; /* Transición suave para el hover */
+}
+
+.auth-form button:hover {
+  background-color: #0056b3; /* Color más oscuro al pasar el cursor por encima */
+}
+
+.already-account {
+  text-align: center; /* Texto alineado al centro */
+  margin-top: 15px; /* Espaciado extra en la parte superior */
+}
+
+.already-account a {
+  color: #007bff; /* Color del enlace */
+  text-decoration: none; /* Sin subrayado en los enlaces */
+  transition: color 0.3s; /* Transición suave para el hover */
+}
+
+.already-account a:hover {
+  color: #0056b3; /* Cambiar color al pasar el cursor por encima del enlace */
+}
+
+.auth-form input:focus {
+  border-color: #007bff; /* Cambia el color del borde al enfocar */
+  outline: none; /* Elimina el borde predeterminado */
+}

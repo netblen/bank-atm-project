@@ -1,0 +1,17 @@
+{
+    "folders": [
+        {
+            "path": "bank-atm-project"
+        }
+    ],
+    "settings": {
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-dotnettools.csharp",
+            "esbenp.prettier-vscode"
+        ]
+    }
+}
