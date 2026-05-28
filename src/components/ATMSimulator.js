@@ -130,9 +130,7 @@ const ATMSimulator = () => {
         </div>
 
         <div className="profile-dropdown-container">
-          <button className="financial-goals-button" onClick={() => handleRedirect('/FinancialGoals')}>
-            Financial Goals
-          </button>
+          
           <button className="profile-button"onClick={() => toggleDropdown('profile')}>
           Profile and Preferences
           </button>

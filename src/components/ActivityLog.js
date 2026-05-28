@@ -50,7 +50,6 @@ const ActivityLog = () => {
               <th>Activity Type</th>
               <th>Amount</th>
               <th>Date</th>
-              <th>Sign In Date</th>
             </tr>
           </thead>
           <tbody>
@@ -60,7 +59,6 @@ const ActivityLog = () => {
                 <td>{activity.activityType}</td>
                 <td>{activity.amount}</td>
                 <td>{new Date(activity.activityDate).toLocaleString()}</td>
-                <td>{new Date(activity.signInDate).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

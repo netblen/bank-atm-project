@@ -22,7 +22,7 @@ const Savings = () => {
       const response = await axios.get(`https://localhost:7243/api/users/savingstransactionsByEmail?email=${userEmail}`);
       setTransactions(response.data.$values || []);
     } catch (err) {
-      setError(err.response?.data?.title || 'Error fetching transactions');
+      setError(err.response?.data?.title || 'No data');
     }
   }, [userEmail]);
 
