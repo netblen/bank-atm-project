@@ -39,7 +39,11 @@ const SignIn = () => {
       }
     } catch (error) {
       console.error('Error during sign-in:', error);
-      alert(error.response?.data?.message || 'An error occurred during sign-in. Please try again.');
+      if (error.response?.status === 401) {
+        alert('Invalid email or password. Create an account first if this is a new database.');
+      } else {
+        alert(error.response?.data?.message || 'An error occurred during sign-in. Please try again.');
+      }
     }
   };
 

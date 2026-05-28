@@ -55,10 +55,15 @@ const SignUp = () => {
       return;
     }
 
+    if (!signUpData.date_of_birth) {
+      alert('Please enter your date of birth.');
+      return;
+    }
+
     // Validación de edad
     const today = new Date();
     const birthDate = new Date(signUpData.date_of_birth);
-    const age = today.getFullYear() - birthDate.getFullYear();
+    let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
       age--;
@@ -189,7 +194,7 @@ const SignUp = () => {
         </div>
         <div>
           <label>Date of Birth:</label><br />
-          <input type="date" name="date_of_birth" value={signUpData.date_of_birth} onChange={handleInputChange} />
+          <input type="date" name="date_of_birth" value={signUpData.date_of_birth} onChange={handleInputChange} required />
         </div>
         <button type="submit" disabled={loading}>
           {loading ? 'Signing Up...' : 'Sign Up'}

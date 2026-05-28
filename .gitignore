@@ -19,6 +19,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+atm-backend/appsettings.Local.json
 
 npm-debug.log*
 yarn-debug.log*

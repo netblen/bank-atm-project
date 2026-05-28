@@ -1,89 +1,196 @@
 // src/components/Home.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Slider from 'react-slick';
-import ShareOnSocialMedia from './ShareOnSocialMedia'; // Importar el componente
+import { motion } from 'framer-motion';
+import ShareOnSocialMedia from './ShareOnSocialMedia';
 import './Home.css';
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
 
 const Home = () => {
-  const promotions = [
+  const featureCards = [
     {
       id: 1,
-      title: 'Get $50 on Your First Sign Up!',
-      description: 'Create an account and receive a bonus of $50 to kickstart your savings.',
+      title: 'Secure everyday banking',
+      description: 'Sign in, review activity, and simulate ATM transactions in one focused workspace.',
+      metric: '24/7',
+      label: 'account access',
     },
     {
       id: 2,
-      title: 'Refer a Friend and Earn Rewards!',
-      description: 'Invite friends to join and earn $25 for each successful referral.',
+      title: 'Balance clarity',
+      description: 'Track checking and savings balances with fast views of recent account movement.',
+      metric: '2',
+      label: 'account types',
     },
     {
       id: 3,
-      title: 'No Fees for the First Year!',
-      description: 'Enjoy no monthly maintenance fees for the first year when you open a new account.',
-    },
-    {
-      id: 4,
-      title: 'Exclusive Loan Rates for Members!',
-      description: 'Join now to access exclusive low-interest rates on personal loans.',
+      title: 'Guided money actions',
+      description: 'Move through deposits, withdrawals, transfers, payments, and goals with less guesswork.',
+      metric: '5+',
+      label: 'money tools',
     },
   ];
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true, 
-    autoplaySpeed: 2000, 
-  };
+  const quickActions = [
+    { to: '/SignIn', title: 'Sign in', text: 'Continue to your account dashboard.' },
+    { to: '/SignUp', title: 'Create account', text: 'Start a new profile for the simulator.' },
+    { to: '/Locator', title: 'Find an ATM', text: 'View nearby ATM locations on the map.' },
+    { to: '/TransactionGlossary', title: 'Learn terms', text: 'Review common banking and transaction terms.' },
+  ];
+
+  const promotions = [
+    {
+      id: 1,
+      title: '$50 welcome bonus',
+      description: 'Open your simulator profile and start practicing healthy saving habits.',
+      tag: 'New members',
+    },
+    {
+      id: 2,
+      title: 'First year fee preview',
+      description: 'Explore how no-fee banking changes your monthly cash flow.',
+      tag: 'Planning',
+    },
+    {
+      id: 3,
+      title: 'Goal builder',
+      description: 'Set a target, choose a due date, and monitor your saving progress.',
+      tag: 'Savings',
+    },
+  ];
 
   return (
     <div className="home-container">
-      <header className="home-header">
-        <h1>Welcome to the Bank ATM Simulator</h1>
-        <p>Your personal online banking experience, designed to help you manage your finances with ease.</p>
-        <Link to="/SignIn" className="cta-button">Get Started</Link>
+      <header className="home-hero">
+        <motion.div
+          className="hero-copy"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+        >
+          <p className="hero-eyebrow">Bank ATM Simulator</p>
+          <h1>Welcome back to smarter, simpler banking practice.</h1>
+          <p className="hero-lede">
+            Manage balances, simulate transactions, schedule support, and build confidence before
+            you make real banking decisions.
+          </p>
+
+          <div className="hero-actions">
+            <Link to="/SignIn" className="primary-action">Get started</Link>
+            <Link to="/SignUp" className="secondary-action">Create account</Link>
+          </div>
+
+          <dl className="hero-stats" aria-label="Simulator highlights">
+            <div>
+              <dt>Fast</dt>
+              <dd>ATM-style workflows</dd>
+            </div>
+            <div>
+              <dt>Clear</dt>
+              <dd>Balance views</dd>
+            </div>
+            <div>
+              <dt>Guided</dt>
+              <dd>Financial goals</dd>
+            </div>
+          </dl>
+        </motion.div>
+
+        <motion.div
+          className="atm-preview"
+          aria-label="ATM simulator preview"
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <div className="atm-screen">
+            <div className="screen-topline">
+              <span>Available balance</span>
+              <strong>$4,280.50</strong>
+            </div>
+            <div className="balance-chart" aria-hidden="true">
+              <span className="bar bar-checking"></span>
+              <span className="bar bar-savings"></span>
+              <span className="bar bar-payments"></span>
+            </div>
+            <div className="screen-list">
+              <div>
+                <span>Checking</span>
+                <strong>$2,130.00</strong>
+              </div>
+              <div>
+                <span>Savings</span>
+                <strong>$2,150.50</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="atm-controls" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </motion.div>
       </header>
 
-      <section className="features-section">
-        <h2>Key Features</h2>
-        <div className="features-list">
-          <div className="feature">
-            <h3>Secure Transactions</h3>
-            <p>Experience secure and seamless transactions with our state-of-the-art encryption technology.</p>
-          </div>
-          <div className="feature">
-            <h3>Account Management</h3>
-            <p>Easily check your balance, withdraw, deposit, and transfer money anytime, anywhere.</p>
-          </div>
-          <div className="feature">
-            <h3>Real-time Updates</h3>
-            <p>Receive instant updates on your account activity and transaction history.</p>
-          </div>
+      <section className="quick-actions-section" aria-labelledby="quick-actions-title">
+        <div className="section-heading">
+          <p>Choose your next step</p>
+          <h2 id="quick-actions-title">Jump into the tools you need</h2>
+        </div>
+
+        <div className="quick-actions-grid">
+          {quickActions.map((action) => (
+            <Link className="quick-action" key={action.title} to={action.to}>
+              <span>{action.title}</span>
+              <p>{action.text}</p>
+            </Link>
+          ))}
         </div>
       </section>
 
-      <section className="promotions-section">
-        <h2>Explore Promotions</h2>
-        <Slider {...settings}>
-          {promotions.map(promotion => (
-            <div key={promotion.id} className="promotion">
-              <h3>{promotion.title}</h3>
-              <p>{promotion.description}</p>
-            </div>
+      <section className="features-section" aria-labelledby="features-title">
+        <div className="section-heading">
+          <p>Built for practice</p>
+          <h2 id="features-title">A cleaner way to learn online banking</h2>
+        </div>
+
+        <div className="features-list">
+          {featureCards.map((feature) => (
+            <article className="feature" key={feature.id}>
+              <div className="feature-metric">
+                <strong>{feature.metric}</strong>
+                <span>{feature.label}</span>
+              </div>
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </article>
           ))}
-        </Slider>
+        </div>
       </section>
 
-      {/* Dividir el footer en dos secciones */}
+      <section className="promotions-section" aria-labelledby="promotions-title">
+        <div className="section-heading">
+          <p>Offers and learning prompts</p>
+          <h2 id="promotions-title">Explore what you can practice today</h2>
+        </div>
+
+        <div className="promotions-list">
+          {promotions.map((promotion) => (
+            <article key={promotion.id} className="promotion">
+              <span>{promotion.tag}</span>
+              <h3>{promotion.title}</h3>
+              <p>{promotion.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <footer className="home-footer">
         <div className="footer-main">
-          <p>Join us and simulate real banking transactions in a secure environment.</p>
-          <Link to="/SignUp" className="cta-button">Create Account</Link>
+          <h2>Ready to explore your simulator account?</h2>
+          <p>Practice real banking decisions in a secure environment built for learning.</p>
+          <Link to="/SignIn" className="primary-action">Open simulator</Link>
         </div>
 
         <div className="footer-share">
