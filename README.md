@@ -122,9 +122,4 @@ If you see Browserslist warnings, the app can still run. To refresh the browser 
 npx update-browserslist-db@latest
 ```
 
-## Notes
-
-- Do not commit `atm-backend/appsettings.Local.json`.
-- Do not commit `node_modules`, `build`, `bin`, or `obj` folders.
-- Do not commit personal editor folders like `.vscode/`.
 - The main development command for this project is `npm run dev`.
