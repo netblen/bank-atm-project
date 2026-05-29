@@ -1,36 +1,204 @@
-.activity-log {
-    padding: 20px;
-    background-color: #ffffff;
+.activity-log-page {
+  min-height: calc(100vh - 74px);
+  background: linear-gradient(180deg, #f7faf8 0%, #edf3f0 52%, #f8faf9 100%);
+  color: #17211d;
+  padding: 48px 20px 56px;
+}
+
+.activity-log-shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.activity-log-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.42fr);
+  gap: 28px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.activity-log-eyebrow {
+  margin: 0 0 12px;
+  color: #2a7d72;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.activity-log-header h1 {
+  margin: 0;
+  color: #101815;
+  font-size: clamp(2.2rem, 4.6vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.activity-log-header p {
+  max-width: 650px;
+  margin: 18px 0 0;
+  color: #56645f;
+  font-size: 1.06rem;
+  line-height: 1.65;
+}
+
+.activity-log-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.activity-log-summary div,
+.activity-log-toolbar,
+.activity-log-table-card,
+.activity-log-message {
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 16px 40px rgba(23, 33, 29, 0.08);
+}
+
+.activity-log-summary div {
+  padding: 18px;
+}
+
+.activity-log-summary strong {
+  display: block;
+  color: #101815;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.activity-log-summary span {
+  display: block;
+  margin-top: 8px;
+  color: #64726d;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.activity-log-toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 16px;
+  padding: 18px;
+}
+
+.activity-log-toolbar label {
+  display: grid;
+  gap: 8px;
+  color: #17211d;
+  font-weight: 900;
+}
+
+.activity-log-toolbar input {
+  width: 100%;
+  min-height: 46px;
+  box-sizing: border-box;
+  border: 1px solid #cddbd5;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #17211d;
+  font: inherit;
+  padding: 0 13px;
+  outline: none;
+}
+
+.activity-log-toolbar input:focus {
+  border-color: #2a9d8f;
+  box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.16);
+}
+
+.activity-log-toolbar button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 6px;
+  background: #17211d;
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 0 14px;
+}
+
+.activity-log-toolbar button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.activity-log-message {
+  margin-bottom: 16px;
+  background: #fff1d1;
+  color: #785410;
+  font-weight: 800;
+  padding: 14px;
+}
+
+.activity-log-table-card {
+  overflow: hidden;
+}
+
+.activity-log-table-wrap {
+  overflow-x: auto;
+}
+
+.activity-log-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.activity-log-table th,
+.activity-log-table td {
+  border-bottom: 1px solid #e2ebe7;
+  padding: 14px 12px;
+  text-align: left;
+}
+
+.activity-log-table th {
+  color: #41504a;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+}
+
+.activity-log-table td:nth-child(3) {
+  font-weight: 900;
+}
+
+.activity-log-type {
+  display: inline-flex;
+  border-radius: 999px;
+  background: #e6f3ef;
+  color: #174f49;
+  font-size: 0.74rem;
+  font-weight: 900;
+  padding: 5px 9px;
+  text-transform: uppercase;
+}
+
+.activity-log-empty {
+  margin: 0;
+  color: #5c6a65;
+  font-weight: 800;
+  padding: 22px;
+  text-align: center;
+}
+
+@media (max-width: 920px) {
+  .activity-log-header,
+  .activity-log-toolbar {
+    grid-template-columns: 1fr;
   }
-  
-  .activity-log h3 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
+}
+
+@media (max-width: 640px) {
+  .activity-log-page {
+    padding: 30px 14px 42px;
   }
-  
-  .activity-log table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+
+  .activity-log-summary {
+    grid-template-columns: 1fr;
   }
-  
-  .activity-log th, .activity-log td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-  
-  .activity-log th {
-    background-color: #f4f4f4;
-    color: #333;
-  }
-  
-  .activity-log tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .activity-log tr:hover {
-    background-color: #f1f1f1;
-  }
-  
+}

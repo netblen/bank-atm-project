@@ -1,62 +1,167 @@
-.payment-container {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f4f4f4;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
+.payments-page {
+  min-height: calc(100vh - 74px);
+  background: linear-gradient(180deg, #f7faf8 0%, #edf3f0 52%, #f8faf9 100%);
+  color: #17211d;
+  padding: 48px 20px 56px;
+}
+
+.payments-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1fr);
+  gap: 36px;
+  align-items: start;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.payments-eyebrow,
+.payments-form-heading span {
+  margin: 0;
+  color: #2a7d72;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.payments-info h1 {
+  max-width: 720px;
+  margin: 12px 0 0;
+  color: #101815;
+  font-size: clamp(2.2rem, 4.6vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.payments-info p {
+  max-width: 600px;
+  margin: 20px 0 0;
+  color: #56645f;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.payments-balance-card,
+.payments-form {
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 45px rgba(23, 33, 29, 0.09);
+}
+
+.payments-balance-card {
+  display: grid;
+  gap: 10px;
+  max-width: 360px;
+  margin-top: 26px;
+  padding: 22px;
+}
+
+.payments-balance-card span {
+  color: #2a7d72;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.payments-balance-card strong {
+  color: #101815;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.payments-form {
+  display: grid;
+  gap: 16px;
+  max-width: none;
+  margin: 0;
+  padding: 32px;
+}
+
+.payments-form-heading h2 {
+  margin: 8px 0 0;
+  color: #101815;
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.payments-field {
+  display: grid;
+  gap: 8px;
+  color: #17211d;
+  font-weight: 900;
+}
+
+.payments-field input,
+.payments-field select {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  border: 1px solid #cddbd5;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #17211d;
+  font: inherit;
+  padding: 0 13px;
+  outline: none;
+}
+
+.payments-field input:focus,
+.payments-field select:focus {
+  border-color: #2a9d8f;
+  box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.16);
+}
+
+.payments-message {
+  margin: 0;
+  border-radius: 6px;
+  font-weight: 800;
+  line-height: 1.45;
+  padding: 12px;
+}
+
+.payments-message.is-error {
+  background: #fff1d1;
+  color: #785410;
+}
+
+.payments-message.is-success {
+  background: #e1f4ee;
+  color: #176357;
+}
+
+.payments-form button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 6px;
+  background: #17211d;
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.payments-form button:hover:not(:disabled) {
+  background: #22312c;
+}
+
+.payments-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+@media (max-width: 920px) {
+  .payments-shell {
+    grid-template-columns: 1fr;
   }
-  
-  .payment-form {
-    display: flex;
-    flex-direction: column;
+}
+
+@media (max-width: 640px) {
+  .payments-page {
+    padding: 30px 14px 42px;
   }
-  
-  .form-group {
-    margin-bottom: 20px;
+
+  .payments-form {
+    padding: 24px;
   }
-  
-  label {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
-  
-  input:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  .submit-btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .payment-message {
-    margin-top: 20px;
-    font-size: 18px;
-    color: green;
-  }
-  
+}

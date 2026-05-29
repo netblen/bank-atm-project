@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useUser } from './UserContext';
-import './SecurityPassword.css';
 import withAutoLogout from './withAutoLogout';
+import './SecurityPassword.css';
+
+const securityQuestions = [
+  "What is your mother's maiden name?",
+  'What was the name of your first pet?',
+  'What is your favorite color?',
+  'What is your favorite book?',
+  'What is your hometown?',
+  'What is your dream job?',
+  'What is your favorite movie?',
+  'What is your favorite food?',
+  'What is your favorite animal?',
+];
 
 const SecurityPassword = () => {
   const { userEmail } = useUser();
@@ -10,12 +22,13 @@ const SecurityPassword = () => {
   const [securityAnswer, setSecurityAnswer] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (!userEmail) {
-        alert('User email is not found. Please log in again.');
+        setMessage('User email is not found. Please log in again.');
         return;
       }
 
@@ -28,110 +41,132 @@ const SecurityPassword = () => {
         setSecurityAnswer('');
       } catch (error) {
         console.error('Error fetching user details:', error);
-        alert('Error loading user details: ' + (error.response?.data?.message || error.message));
+        setMessage('Error loading user details: ' + (error.response?.data?.message || error.message));
       }
     };
 
     fetchUserDetails();
   }, [userEmail]);
 
-  const validatePassword = (password) => {
-    return /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{6,}$/.test(password);
-  };
+  const validatePassword = (password) => /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{6,}$/.test(password);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setMessage('');
 
-    // Validate password
     if (!validatePassword(newPassword)) {
-      alert('Password must contain at least one uppercase letter, one special character, and one number, and be at least 6 characters long.');
+      setMessage('Password needs 6+ characters, one uppercase letter, one number, and one special character.');
       return;
     }
 
-    // Check password confirmation
     if (newPassword !== confirmPassword) {
-      alert('Passwords do not match.');
+      setMessage('Passwords do not match.');
       return;
     }
 
     if (!userEmail) {
-      alert('User email is not found. Please log in again.');
+      setMessage('User email is not found. Please log in again.');
       return;
     }
 
-    setLoading(true); // Show loading state
+    setLoading(true);
 
     try {
       const response = await axios.post('https://localhost:7243/api/Users/security-password', {
         email: userEmail,
-        securityQuestion: securityQuestion,
-        securityAnswer: securityAnswer, // Send the security answer
+        securityQuestion,
+        securityAnswer,
         newPassword,
       });
 
       if (response.status === 200) {
         alert('Password changed successfully.');
-        // Reset form or redirect if necessary
+        setSecurityAnswer('');
+        setNewPassword('');
+        setConfirmPassword('');
       }
     } catch (error) {
       console.error('Error resetting password:', error);
-      alert('Error resetting password: ' + (error.response?.data?.message || 'An error occurred. Please try again.'));
+      setMessage('Error resetting password: ' + (error.response?.data?.message || 'Please try again.'));
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false);
     }
   };
 
   return (
-    <div className="security-password-form">
-      <h2>Change Password</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Security Question:</label><br />
-          <select value={securityQuestion} onChange={(e) => setSecurityQuestion(e.target.value)} required>
-            <option value="">Select Security Question</option>
-            <option value="What is your mother’s maiden name?">What is your mother’s maiden name?</option>
-            <option value="What was the name of your first pet?">What was the name of your first pet?</option>
-            <option value="What is your favorite color?">What is your favorite color?</option>
-            <option value="What is your favorite book?">What is your favorite book?</option>
-            <option value="What is your hometown?">What is your hometown?</option>
-            <option value="What is your dream job?">What is your dream job?</option>
-            <option value="What is your favorite movie?">What is your favorite movie?</option>
-            <option value="What is your favorite food?">What is your favorite food?</option>
-            <option value="What is your favorite animal?">What is your favorite animal?</option>
-          </select>
+    <main className="security-page">
+      <section className="security-shell">
+        <div className="security-info">
+          <p className="security-eyebrow">Account security</p>
+          <h1>Change your password securely.</h1>
+          <p>
+            Confirm your security question and answer before setting a new password for your account.
+          </p>
+
+          <div className="security-rules">
+            <span>Uppercase letter</span>
+            <span>Number</span>
+            <span>Special character</span>
+            <span>6+ characters</span>
+          </div>
         </div>
-        <div>
-          <label>Security Answer:</label><br />
-          <input
-            type="password" // Change to password type
-            value={securityAnswer}
-            onChange={(e) => setSecurityAnswer(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>New Password:</label><br />
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirm New Password:</label><br />
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Changing...' : 'Change Password'}
-        </button>
-      </form>
-    </div>
+
+        <form className="security-form" onSubmit={handleSubmit}>
+          <div className="security-form-heading">
+            <span>Password reset</span>
+            <h2>Verify and update</h2>
+          </div>
+
+          <label className="security-field">
+            <span>Security question</span>
+            <select value={securityQuestion} onChange={(event) => setSecurityQuestion(event.target.value)} required>
+              <option value="">Select Security Question</option>
+              {securityQuestions.map((question) => (
+                <option key={question} value={question}>
+                  {question}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="security-field">
+            <span>Security answer</span>
+            <input
+              type="password"
+              value={securityAnswer}
+              onChange={(event) => setSecurityAnswer(event.target.value)}
+              required
+            />
+          </label>
+
+          <label className="security-field">
+            <span>New password</span>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
+              required
+            />
+          </label>
+
+          <label className="security-field">
+            <span>Confirm new password</span>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              required
+            />
+          </label>
+
+          {message && <p className="security-message">{message}</p>}
+
+          <button type="submit" disabled={loading}>
+            {loading ? 'Changing...' : 'Change password'}
+          </button>
+        </form>
+      </section>
+    </main>
   );
 };
 

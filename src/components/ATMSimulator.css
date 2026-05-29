@@ -1,88 +1,254 @@
-/* ATMSimulator.css */
-
-.atm-simulator-container {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 800px;
-  margin: auto;
-  background-color: #ffffff; /* Cambiado a blanco para un aspecto más limpio */
-  border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+.atm-page {
+  min-height: calc(100vh - 74px);
+  background: linear-gradient(180deg, #f7faf8 0%, #edf3f0 52%, #f8faf9 100%);
+  color: #17211d;
+  padding: 42px 20px 56px;
 }
 
-.atm-header {
+.atm-dashboard {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.atm-dashboard-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+.atm-eyebrow {
+  margin: 0 0 10px;
+  color: #2a7d72;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.atm-dashboard-header h1 {
+  margin: 0;
+  color: #101815;
+  font-size: clamp(2.15rem, 4vw, 4.35rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.atm-dashboard-header h1 span {
+  color: #2a7d72;
+}
+
+.atm-dashboard-header p:not(.atm-eyebrow) {
+  max-width: 660px;
+  margin: 18px 0 0;
+  color: #56645f;
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.atm-header-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white; /* Color de fondo más atractivo */
-  color: white; /* Color del texto en blanco */
-  padding: 15px 20px;
-  border-radius: 10px 10px 0 0; /* Bordes redondeados en la parte superior */
-}
-
-.menu button {
-  margin-right: 15px;
-  background-color: #f1f1f1; /* Color de fondo de los botones */
-  border: none;
-  border-radius: 5px; /* Bordes redondeados en botones */
-  padding: 10px 15px; /* Espaciado interno */
-  cursor: pointer; /* Cambia el cursor al pasar por encima */
-}
-
-.logout-button {
-  background-color: red;
-  color: white;
-  border-radius: 5px; /* Bordes redondeados */
-}
-
-.card-info {
-  margin: 20px 0;
-  background-color: #f0f8ff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-}
-
-.card-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.balance-section h3 {
-  font-size: 24px;
-  color: #333; /* Color más oscuro para el texto */
-}
-
-.atm-buttons .atm-button {
-  margin-right: 10px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff; /* Color de fondo azul */
-  color: white; /* Texto en blanco */
-  cursor: pointer;
-}
-
-.atm-buttons .atm-button:hover {
-  background-color: #0056b3; /* Color más oscuro al pasar el ratón */
-}
-
-.tabs-container {
-  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  margin-top: 20px;
+  justify-content: flex-end;
 }
 
-.tab {
-  padding: 10px;
-  background-color: #e0e0e0;
-  border-radius: 5px;
+.atm-menu {
+  position: relative;
+}
+
+.atm-menu > button,
+.atm-logout {
+  min-height: 42px;
+  border: 1px solid #cddbd5;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #17211d;
+  font-weight: 900;
+  padding: 0 14px;
+}
+
+.atm-menu > button:hover {
+  background: #e6f3ef;
+  color: #174f49;
+}
+
+.atm-logout {
+  border-color: rgba(164, 55, 55, 0.22);
+  background: #fff3f3;
+  color: #913333;
+}
+
+.atm-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  min-width: 230px;
+  overflow: hidden;
+  border: 1px solid rgba(23, 33, 29, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(23, 33, 29, 0.15);
+}
+
+.atm-dropdown button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #17211d;
+  font-weight: 800;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.atm-dropdown button:hover {
+  background: #eef7f4;
+  color: #174f49;
+}
+
+.atm-overview,
+.atm-main-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.atm-overview {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 16px;
+}
+
+.atm-main-grid {
+  grid-template-columns: minmax(320px, 0.48fr) minmax(0, 1fr);
+}
+
+.atm-balance-card,
+.atm-chart-card,
+.atm-actions-card {
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 45px rgba(23, 33, 29, 0.08);
+}
+
+.atm-balance-card {
+  display: grid;
+  gap: 10px;
+  min-height: 150px;
+  padding: 22px;
+}
+
+.atm-balance-card span {
+  color: #2a7d72;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.atm-balance-card strong {
+  color: #101815;
+  font-size: clamp(1.7rem, 3vw, 2.55rem);
+  line-height: 1;
+}
+
+.atm-balance-card p,
+.atm-actions-card h2 {
+  margin: 0;
+}
+
+.atm-balance-card p {
+  color: #5c6a65;
+  line-height: 1.5;
+}
+
+.atm-chart-card,
+.atm-actions-card {
+  padding: 24px;
+}
+
+.atm-chart-card h2,
+.atm-actions-card h2 {
+  color: #101815;
+  font-size: clamp(1.55rem, 3vw, 2.3rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.atm-chart {
+  height: 320px;
+  margin-top: 18px;
+}
+
+.atm-actions-card {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+}
+
+.atm-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.atm-action-grid button {
+  min-height: 84px;
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: #17211d;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 900;
   cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
 
-.chart-container {
-  width: 300px; /* Cambia esto al tamaño que desees */
-  height: 200px; /* Cambia esto al tamaño que desees */
-  margin: 0 auto; /* Centra el gráfico horizontalmente */
+.atm-action-grid button:nth-child(even) {
+  background: #2a7d72;
+}
+
+.atm-action-grid button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(23, 33, 29, 0.16);
+}
+
+@media (max-width: 920px) {
+  .atm-dashboard-header,
+  .atm-overview,
+  .atm-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .atm-header-actions {
+    justify-content: flex-start;
+  }
+
+  .atm-dropdown {
+    right: auto;
+    left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .atm-page {
+    padding: 30px 14px 42px;
+  }
+
+  .atm-header-actions,
+  .atm-menu,
+  .atm-menu > button,
+  .atm-logout {
+    width: 100%;
+  }
+
+  .atm-dropdown {
+    position: static;
+    margin-top: 8px;
+  }
+
+  .atm-action-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,91 +1,122 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import terms from "./data";
-import withAutoLogout from './withAutoLogout';
-import { motion } from "framer-motion"; 
+import withAutoLogout from "./withAutoLogout";
 import "./TransactionGlossary.css";
+
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 const TransactionGlossary = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLetter, setSelectedLetter] = useState("");
 
-  // Obtener las letras del alfabeto
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const filteredTerms = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
 
-  // Filtrar los términos por la letra seleccionada o por la búsqueda
-  const filteredTerms = terms.filter((item) => {
-    const termStartsWithSelectedLetter =
-      selectedLetter === "" || item.term.toLowerCase().startsWith(selectedLetter.toLowerCase());
-    const termMatchesSearch = item.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return terms.filter((item) => {
+      const matchesLetter = !selectedLetter || item.term.toLowerCase().startsWith(selectedLetter.toLowerCase());
+      const matchesSearch =
+        !query ||
+        item.term.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query);
 
-    return termStartsWithSelectedLetter && termMatchesSearch;
-  });
+      return matchesLetter && matchesSearch;
+    });
+  }, [searchTerm, selectedLetter]);
 
-  // Función para manejar la búsqueda
-  const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    setSearchTerm(query);
-  };
-
-  // Función para manejar la selección de letras
-  const handleLetterClick = (letter) => {
-    setSelectedLetter(letter);
-  };
+  const categoriesCount = new Set(terms.map((item) => item.category)).size;
 
   return (
-    <div className="container">
-      <h1 className="title">Transaction Glossary</h1>
+    <div className="glossary-page">
+      <section className="glossary-hero">
+        <div>
+          <p className="glossary-eyebrow">Transaction glossary</p>
+          <h1>Banking terms, explained clearly.</h1>
+          <p className="glossary-lede">
+            Browse common ATM, account, credit, and payment terms without leaving your banking workspace.
+          </p>
+        </div>
 
-      <input
-        type="text"
-        placeholder="Search for a term..."
-        value={searchTerm}
-        onChange={handleSearch}
-        className="search-input"
-      />
+        <div className="glossary-stats" aria-label="Glossary summary">
+          <div>
+            <strong>{terms.length}</strong>
+            <span>Total terms</span>
+          </div>
+          <div>
+            <strong>{categoriesCount}</strong>
+            <span>Categories</span>
+          </div>
+        </div>
+      </section>
 
-      <div className="alphabet-index">
-        {alphabet.map((letter) => (
+      <section className="glossary-tools">
+        <label className="glossary-search">
+          <span>Search glossary</span>
+          <input
+            type="text"
+            placeholder="Search a term or description..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </label>
+
+        <div className="glossary-filter">
           <button
-            key={letter}
-            className={`alphabet-button ${selectedLetter === letter ? "selected" : ""}`}
-            onClick={() => handleLetterClick(letter)}
+            type="button"
+            className={`glossary-letter ${selectedLetter === "" ? "is-selected" : ""}`}
+            onClick={() => setSelectedLetter("")}
           >
-            {letter}
+            All
           </button>
-        ))}
-        <button
-          className={`alphabet-button ${selectedLetter === "" ? "selected" : ""}`}
-          onClick={() => handleLetterClick("")}
-        >
-          All
-        </button>
+
+          {alphabet.map((letter) => (
+            <button
+              type="button"
+              key={letter}
+              className={`glossary-letter ${selectedLetter === letter ? "is-selected" : ""}`}
+              onClick={() => setSelectedLetter(letter)}
+            >
+              {letter}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <div className="glossary-results-bar">
+        <strong>{filteredTerms.length} results</strong>
+        {(searchTerm || selectedLetter) && (
+          <button
+            type="button"
+            onClick={() => {
+              setSearchTerm("");
+              setSelectedLetter("");
+            }}
+          >
+            Clear filters
+          </button>
+        )}
       </div>
 
       {filteredTerms.length > 0 ? (
-        <div className="terms-container">
-          {filteredTerms.map((item, index) => (
-            <motion.div
-              key={index}
-              className="term"
-              whileHover={{
-                y: -10, // Eleva el box al pasar el cursor
-                backgroundColor: "#f0f0f0", // Cambia el color de fondo al pasar el cursor
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)" // Agrega una sombra suave
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 300, // Controla la rigidez de la animación
-                damping: 20, // Controla la suavidad
-              }}
+        <section className="glossary-grid">
+          {filteredTerms.map((item) => (
+            <motion.article
+              key={`${item.category}-${item.term}`}
+              className="glossary-card"
+              whileHover={{ y: -4 }}
+              transition={{ type: "spring", stiffness: 280, damping: 22 }}
             >
-              <h3 className="term-title">{item.term}</h3>
-              <p className="term-description">{item.description}</p>
-            </motion.div>
+              <span className="glossary-category">{item.category}</span>
+              <h2>{item.term}</h2>
+              <p>{item.description}</p>
+            </motion.article>
           ))}
-        </div>
+        </section>
       ) : (
-        <p className="no-results">No results found. Try a different search term.</p>
+        <section className="glossary-empty">
+          <strong>No results found</strong>
+          <p>Try a different search term or clear the selected letter.</p>
+        </section>
       )}
     </div>
   );

@@ -1,36 +1,134 @@
-/* styles.css */
-.dashboard-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f8f9fa; /* Fondo claro */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+.performance-page {
+  min-height: calc(100vh - 74px);
+  background: linear-gradient(180deg, #f7faf8 0%, #edf3f0 52%, #f8faf9 100%);
+  color: #17211d;
+  padding: 48px 20px 56px;
 }
 
-.dashboard-container h2 {
-    text-align: center;
-    color: #343a40; /* Color de texto oscuro */
-    font-size: 24px;
-    margin-bottom: 20px;
+.performance-shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
 }
 
-.metric {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 15px;
-    border-bottom: 1px solid #dee2e6; /* Línea divisoria */
+.performance-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.34fr);
+  gap: 28px;
+  align-items: end;
+  margin-bottom: 24px;
 }
 
-.metric:last-child {
-    border-bottom: none; /* Quitar la línea del último elemento */
+.performance-eyebrow {
+  margin: 0 0 12px;
+  color: #2a7d72;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
-.metric strong {
-    color: #495057; /* Color de texto más oscuro */
+.performance-header h1 {
+  margin: 0;
+  color: #101815;
+  font-size: clamp(2.2rem, 4.6vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: 0;
 }
 
-.metric-value {
-    color: #28a745; /* Color verde para los valores */
-    font-weight: bold;
+.performance-header p {
+  max-width: 650px;
+  margin: 18px 0 0;
+  color: #56645f;
+  font-size: 1.06rem;
+  line-height: 1.65;
+}
+
+.performance-refresh-card,
+.performance-card,
+.performance-message {
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 16px 40px rgba(23, 33, 29, 0.08);
+}
+
+.performance-refresh-card {
+  padding: 22px;
+}
+
+.performance-refresh-card span,
+.performance-card span {
+  color: #2a7d72;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.performance-refresh-card strong {
+  display: block;
+  margin-top: 10px;
+  color: #101815;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.performance-message {
+  margin-bottom: 16px;
+  background: #fff1d1;
+  color: #785410;
+  font-weight: 800;
+  padding: 14px;
+}
+
+.performance-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.performance-card {
+  display: grid;
+  gap: 12px;
+  min-height: 230px;
+  padding: 24px;
+}
+
+.performance-card strong {
+  color: #101815;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1;
+}
+
+.performance-card p {
+  margin: 0;
+  color: #5c6a65;
+  line-height: 1.55;
+}
+
+.performance-meter {
+  align-self: end;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5eee9;
+}
+
+.performance-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2a9d8f, #d8aa3c);
+}
+
+@media (max-width: 920px) {
+  .performance-header,
+  .performance-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .performance-page {
+    padding: 30px 14px 42px;
+  }
 }

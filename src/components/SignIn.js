@@ -8,6 +8,7 @@ import './SignIn.css';
 const SignIn = () => {
   const [signInEmail, setSignInEmail] = useState('');
   const [signInPassword, setSignInPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setUserEmail } = useUser();
   const ROLE_USER = 'User';
@@ -15,24 +16,24 @@ const SignIn = () => {
 
   const handleSignInSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
       const response = await axios.post('https://localhost:7243/api/users/signin', {
-        email: signInEmail,
+        email: signInEmail.trim(),
         password: signInPassword,
       });
 
-      console.log(response.data); // Verifica qué datos recibes
-
       if (response.status === 200) {
-        setUserEmail(signInEmail);
-        const userRole = response.data.rol || response.data.role; // Asegúrate de que este sea el campo correcto
+        setUserEmail(signInEmail.trim());
+        const userRole = response.data.rol || response.data.role;
 
         if (userRole === ROLE_USER) {
-          navigate('/atm-simulator'); // Redirige al simulador ATM para usuarios
+          navigate('/atm-simulator');
         } else if (userRole === ROLE_ADMIN) {
-          navigate('/adminDashboard'); // Redirige al panel de administración para administradores
+          navigate('/adminDashboard');
         } else {
-          alert('Unrecognized role.'); // Manejo de roles no reconocidos
+          alert('Unrecognized role.');
         }
       } else {
         alert('Invalid email or password. Please try again.');
@@ -44,40 +45,83 @@ const SignIn = () => {
       } else {
         alert(error.response?.data?.message || 'An error occurred during sign-in. Please try again.');
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-form">
-      <h2>Sign In</h2>
-      <form onSubmit={handleSignInSubmit}>
-        <div>
-          <label>Email:</label><br />
-          <input
-            type="email"
-            value={signInEmail}
-            onChange={(e) => setSignInEmail(e.target.value)}
-            required
-          />
+    <main className="auth-page">
+      <section className="auth-panel auth-panel-signin" aria-labelledby="signin-title">
+        <div className="auth-visual" aria-hidden="true">
+          <p className="auth-kicker">Secure access</p>
+          <h1>Welcome back to your banking simulator.</h1>
+          <div className="auth-device">
+            <div className="auth-device-header">
+              <span>Current balance</span>
+              <strong>$4,280.50</strong>
+            </div>
+            <div className="auth-progress">
+              <span></span>
+            </div>
+            <div className="auth-device-row">
+              <span>Checking</span>
+              <strong>Ready</strong>
+            </div>
+            <div className="auth-device-row">
+              <span>Savings</span>
+              <strong>Protected</strong>
+            </div>
+          </div>
         </div>
-        <div>
-          <label>Password:</label><br />
-          <input
-            type="password"
-            value={signInPassword}
-            onChange={(e) => setSignInPassword(e.target.value)}
-            required
-          />
+
+        <div className="auth-card">
+          <div className="auth-card-heading">
+            <p>Account access</p>
+            <h2 id="signin-title">Sign in</h2>
+            <span>Use your simulator credentials to continue.</span>
+          </div>
+
+          <form onSubmit={handleSignInSubmit} className="auth-fields">
+            <label className="auth-field">
+              <span>Email</span>
+              <input
+                type="email"
+                value={signInEmail}
+                onChange={(e) => setSignInEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+                required
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>Password</span>
+              <input
+                type="password"
+                value={signInPassword}
+                onChange={(e) => setSignInPassword(e.target.value)}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+              />
+            </label>
+
+            <div className="auth-row">
+              <Link to="/forgot-password">Forgot password?</Link>
+            </div>
+
+            <button type="submit" className="auth-submit" disabled={loading}>
+              {loading ? 'Signing in...' : 'Sign in'}
+            </button>
+          </form>
+
+          <p className="auth-switch">
+            New to the simulator? <Link to="/signup">Create an account</Link>
+          </p>
         </div>
-        <div className="forgot-password">
-          <Link to="/forgot-password">Forgot password?</Link>
-        </div>
-        <button type="submit">Sign In</button>
-      </form>
-      <div className="create-account">
-        <p>Don't have an account? <Link to="/signup">Create new account</Link></p>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

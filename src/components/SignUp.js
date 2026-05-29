@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './SignUp.css';
 
 const SignUp = () => {
@@ -31,25 +31,22 @@ const SignUp = () => {
   };
 
   const validatePhoneNumber = (phone) => {
-    return /^\d{10}$/.test(phone); // Validación: debe tener exactamente 10 dígitos
+    return /^\d{10}$/.test(phone);
   };
 
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación de contraseña
     if (!validatePassword(signUpData.password)) {
       alert('Password must contain at least one uppercase letter, one special character, and one number.');
       return;
     }
 
-    // Confirmación de contraseña
     if (signUpData.password !== signUpData.confirmPassword) {
       alert('Passwords do not match.');
       return;
     }
 
-    // Validación de número de teléfono
     if (!validatePhoneNumber(signUpData.telephone)) {
       alert('Telephone must be 10 digits long and contain only numbers.');
       return;
@@ -60,11 +57,11 @@ const SignUp = () => {
       return;
     }
 
-    // Validación de edad
     const today = new Date();
     const birthDate = new Date(signUpData.date_of_birth);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
+
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
@@ -74,9 +71,12 @@ const SignUp = () => {
       return;
     }
 
-    // Agregar el prefijo de país al número de teléfono
     const phoneWithCountryCode = `+1${signUpData.telephone}`;
-    const updatedSignUpData = { ...signUpData, telephone: phoneWithCountryCode };
+    const updatedSignUpData = {
+      ...signUpData,
+      email: signUpData.email.trim(),
+      telephone: phoneWithCountryCode,
+    };
 
     setLoading(true);
     try {
@@ -100,110 +100,202 @@ const SignUp = () => {
   };
 
   return (
-    <div className="auth-form">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSignUpSubmit}>
-        <div>
-          <label>First Name:</label><br />
-          <input type="text" name="first_name" value={signUpData.first_name} onChange={handleInputChange} required />
+    <main className="auth-page">
+      <section className="auth-panel auth-panel-signup" aria-labelledby="signup-title">
+        <div className="auth-visual" aria-hidden="true">
+          <p className="auth-kicker">New profile</p>
+          <h1>Start with a simulator account built for practice.</h1>
+          <div className="auth-device">
+            <div className="auth-device-header">
+              <span>Starter savings</span>
+              <strong>$50.00</strong>
+            </div>
+            <div className="auth-progress auth-progress-wide">
+              <span></span>
+            </div>
+            <div className="auth-device-row">
+              <span>Checking</span>
+              <strong>Included</strong>
+            </div>
+            <div className="auth-device-row">
+              <span>Financial goals</span>
+              <strong>Enabled</strong>
+            </div>
+          </div>
         </div>
-        <div>
-          <label>Last Name:</label><br />
-          <input type="text" name="last_name" value={signUpData.last_name} onChange={handleInputChange} required />
+
+        <div className="auth-card">
+          <div className="auth-card-heading">
+            <p>Open your simulator account</p>
+            <h2 id="signup-title">Create account</h2>
+            <span>Fill in your details once, then practice banking with a fresh profile.</span>
+          </div>
+
+          <form onSubmit={handleSignUpSubmit} className="auth-fields auth-fields-grid">
+            <label className="auth-field">
+              <span>First name</span>
+              <input
+                type="text"
+                name="first_name"
+                value={signUpData.first_name}
+                onChange={handleInputChange}
+                autoComplete="given-name"
+                required
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>Last name</span>
+              <input
+                type="text"
+                name="last_name"
+                value={signUpData.last_name}
+                onChange={handleInputChange}
+                autoComplete="family-name"
+                required
+              />
+            </label>
+
+            <label className="auth-field auth-field-wide">
+              <span>Email</span>
+              <input
+                type="email"
+                name="email"
+                value={signUpData.email}
+                onChange={handleInputChange}
+                autoComplete="email"
+                required
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>Password</span>
+              <input
+                type="password"
+                name="password"
+                value={signUpData.password}
+                onChange={handleInputChange}
+                autoComplete="new-password"
+                required
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>Confirm password</span>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={signUpData.confirmPassword}
+                onChange={handleInputChange}
+                autoComplete="new-password"
+                required
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>Telephone</span>
+              <input
+                type="tel"
+                name="telephone"
+                value={signUpData.telephone}
+                onChange={handleInputChange}
+                placeholder="10 digits"
+                autoComplete="tel"
+                required
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>Date of birth</span>
+              <input
+                type="date"
+                name="date_of_birth"
+                value={signUpData.date_of_birth}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>City</span>
+              <select name="city" value={signUpData.city} onChange={handleInputChange} required>
+                <option value="">Select city</option>
+                <option value="Montreal">Montreal</option>
+                <option value="Quebec City">Quebec City</option>
+                <option value="Laval">Laval</option>
+                <option value="Gatineau">Gatineau</option>
+                <option value="Longueuil">Longueuil</option>
+                <option value="Sherbrooke">Sherbrooke</option>
+                <option value="Trois-Rivieres">Trois-Rivieres</option>
+                <option value="Saguenay">Saguenay</option>
+                <option value="Repentigny">Repentigny</option>
+              </select>
+            </label>
+
+            <label className="auth-field">
+              <span>Postal code</span>
+              <input
+                type="text"
+                name="postal_code"
+                value={signUpData.postal_code}
+                onChange={handleInputChange}
+                autoComplete="postal-code"
+                required
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>Profession</span>
+              <select name="profession" value={signUpData.profession} onChange={handleInputChange} required>
+                <option value="">Select profession</option>
+                <option value="employed">Employed</option>
+                <option value="student">Student</option>
+                <option value="unemployed">Unemployed</option>
+              </select>
+            </label>
+
+            <label className="auth-field auth-field-wide">
+              <span>Security question</span>
+              <select name="security_question" value={signUpData.security_question} onChange={handleInputChange} required>
+                <option value="">Select security question</option>
+                <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                <option value="What was the name of your first pet?">What was the name of your first pet?</option>
+                <option value="What is your favorite color?">What is your favorite color?</option>
+                <option value="What is your favorite book?">What is your favorite book?</option>
+                <option value="What is your hometown?">What is your hometown?</option>
+                <option value="What is your dream job?">What is your dream job?</option>
+                <option value="What is your favorite movie?">What is your favorite movie?</option>
+                <option value="What is your favorite food?">What is your favorite food?</option>
+                <option value="What is your favorite animal?">What is your favorite animal?</option>
+              </select>
+            </label>
+
+            <label className="auth-field auth-field-wide">
+              <span>Security answer</span>
+              <input
+                type="text"
+                name="security_answer"
+                value={signUpData.security_answer}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+
+            <p className="auth-hint auth-field-wide">
+              Passwords need 6+ characters, one uppercase letter, one number, and one special character.
+            </p>
+
+            <button type="submit" className="auth-submit auth-field-wide" disabled={loading}>
+              {loading ? 'Creating account...' : 'Create account'}
+            </button>
+          </form>
+
+          <p className="auth-switch">
+            Already have an account? <Link to="/signin">Sign in</Link>
+          </p>
         </div>
-        <div>
-          <label>Email:</label><br />
-          <input type="email" name="email" value={signUpData.email} onChange={handleInputChange} required />
-        </div>
-        <div>
-          <label>Password:</label><br />
-          <input
-            type="password"
-            name="password"
-            value={signUpData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirm Password:</label><br />
-          <input
-            type="password"
-            name="confirmPassword"
-            value={signUpData.confirmPassword}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Telephone:</label><br />
-          <input type="text" name="telephone" value={signUpData.telephone} onChange={handleInputChange} required />
-        </div>
-        <div>
-          <label>City:</label><br />
-          <select name="city" value={signUpData.city} onChange={handleInputChange} required>
-            <option value="">Select City</option>
-            <option value="Montreal">Montreal</option>
-            <option value="Quebec City">Quebec City</option>
-            <option value="Laval">Laval</option>
-            <option value="Gatineau">Gatineau</option>
-            <option value="Longueuil">Longueuil</option>
-            <option value="Sherbrooke">Sherbrooke</option>
-            <option value="Trois-Rivières">Trois-Rivières</option>
-            <option value="Saguenay">Saguenay</option>
-            <option value="Repentigny">Repentigny</option>
-          </select>
-        </div>
-        <div>
-          <label>Postal Code:</label><br />
-          <input
-            type="text"
-            name="postal_code"
-            value={signUpData.postal_code}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Profession:</label><br />
-          <select name="profession" value={signUpData.profession} onChange={handleInputChange} required>
-            <option value="">Select Profession</option>
-            <option value="employed">Employed</option>
-            <option value="student">Student</option>
-            <option value="unemployed">Unemployed</option>
-          </select>
-        </div>
-        <div>
-          <label>Security Question:</label><br />
-          <select name="security_question" value={signUpData.security_question} onChange={handleInputChange} required>
-            <option value="">Select Security Question</option>
-            <option value="What is your mother’s maiden name?">What is your mother’s maiden name?</option>
-            <option value="What was the name of your first pet?">What was the name of your first pet?</option>
-            <option value="What is your favorite color?">What is your favorite color?</option>
-            <option value="What is your favorite book?">What is your favorite book?</option>
-            <option value="What is your hometown?">What is your hometown?</option>
-            <option value="What is your dream job?">What is your dream job?</option>
-            <option value="What is your favorite movie?">What is your favorite movie?</option>
-            <option value="What is your favorite food?">What is your favorite food?</option>
-            <option value="What is your favorite animal?">What is your favorite animal?</option>
-          </select>
-        </div>
-        <div>
-          <label>Security Answer:</label><br />
-          <input type="text" name="security_answer" value={signUpData.security_answer} onChange={handleInputChange} required />
-        </div>
-        <div>
-          <label>Date of Birth:</label><br />
-          <input type="date" name="date_of_birth" value={signUpData.date_of_birth} onChange={handleInputChange} required />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Signing Up...' : 'Sign Up'}
-        </button>
-      </form>
-      <div className="already-account">
-        <p>Already have an account? <a href="/signin">Sign In</a></p>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

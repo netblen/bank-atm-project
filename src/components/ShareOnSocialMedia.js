@@ -13,8 +13,8 @@ const ShareOnSocialMedia = () => {
       case 'twitter':
         shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(shareMessage)}`;
         break;
-      case 'pinterest':
-        shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(urlToShare)}&media=&description=${encodeURIComponent(shareMessage)}`;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(urlToShare)}`;
         break;
       default:
         break;
@@ -27,7 +27,7 @@ const ShareOnSocialMedia = () => {
       <h3>Share with Friends</h3>
       <button onClick={() => handleShare('facebook')}>Share on Facebook</button>
       <button onClick={() => handleShare('twitter')}>Share on X (Twitter)</button>
-      <button onClick={() => handleShare('pinterest')}>Share on Pinterest</button>
+      <button onClick={() => handleShare('linkedin')}>Share on LinkedIn</button>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './ScheduleAppointment.css';
@@ -7,45 +7,56 @@ const ScheduleAppointment = () => {
   const [email, setEmail] = useState('');
   const [reason, setReason] = useState('');
   const [appointmentDate, setAppointmentDate] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const isValidEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
+  const minimumDateTime = useMemo(() => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset() + 15);
+    return now.toISOString().slice(0, 16);
+  }, []);
 
-  const handleScheduleAppointment = async () => {
-    if (!email || !reason || !appointmentDate) {
-      alert("Please fill in all fields.");
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  const handleScheduleAppointment = async (event) => {
+    event.preventDefault();
+    setMessage('');
+
+    const trimmedEmail = email.trim();
+    const trimmedReason = reason.trim();
+
+    if (!trimmedEmail || !trimmedReason || !appointmentDate) {
+      setMessage('Please fill in all fields before scheduling.');
       return;
     }
 
-    if (!isValidEmail(email)) {
-      alert("Please enter a valid email address.");
+    if (!isValidEmail(trimmedEmail)) {
+      setMessage('Please enter a valid email address.');
       return;
     }
 
-    if (reason.length < 10 || reason.length > 600) {
-      alert("Reason must be between 10 and 600 characters.");
+    if (trimmedReason.length < 10 || trimmedReason.length > 600) {
+      setMessage('Reason must be between 10 and 600 characters.');
       return;
     }
 
     const selectedDate = new Date(appointmentDate);
     const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    if (selectedDate < today || (selectedDate.toDateString() === today.toDateString() && selectedDate <= now)) {
-      alert("Appointment date must be in the future, and cannot be today at or before the current time.");
+    if (Number.isNaN(selectedDate.getTime()) || selectedDate <= now) {
+      setMessage('Appointment date must be in the future.');
       return;
     }
 
     const appointmentData = {
-      userEmail: email,
-      reason: reason,
-      appointmentDate: selectedDate,
+      userEmail: trimmedEmail,
+      reason: trimmedReason,
+      appointmentDate: selectedDate.toISOString(),
     };
 
     try {
+      setIsSubmitting(true);
       const response = await fetch('https://localhost:7243/api/Users/Appointments', {
         method: 'POST',
         headers: {
@@ -57,44 +68,91 @@ const ScheduleAppointment = () => {
       if (response.ok) {
         alert('Appointment scheduled successfully');
         navigate('/');
-      } else {
-        const errorData = await response.json();
-        alert(`Error scheduling the appointment: ${errorData.message || 'Unknown error'}`);
+        return;
       }
+
+      const errorData = await response.json().catch(() => ({}));
+      setMessage(`Error scheduling appointment: ${errorData.message || 'Please try again.'}`);
     } catch (error) {
-      alert('An unexpected error occurred. Please try again later.');
+      setMessage('An unexpected error occurred. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <motion.div 
-      className="schedule-appointment"
-      initial={{ opacity: 0, scale: 0.9 }} 
-      animate={{ opacity: 1, scale: 1 }} 
-      transition={{ duration: 0.5 }} 
-    >
-      <h2>Schedule Your Appointment</h2>
-      <input
-        type="email"
-        placeholder="Your Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <textarea
-        placeholder="Why do you want to speak with a bank representative? (max 100 words)"
-        value={reason}
-        onChange={(e) => setReason(e.target.value)}
-        maxLength={600}
-      />
-      <input
-        type="datetime-local"
-        value={appointmentDate}
-        onChange={(e) => setAppointmentDate(e.target.value)}
-      />
-      <button onClick={handleScheduleAppointment} className="schedule-button">
-        Schedule Appointment
-      </button>
-    </motion.div>
+    <main className="appointment-page">
+      <section className="appointment-shell">
+        <motion.div
+          className="appointment-info"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+        >
+          <p className="appointment-eyebrow">Bank support</p>
+          <h1>Schedule time with a representative.</h1>
+          <p>
+            Choose a future appointment time and tell the team what you need help with so they can
+            prepare before your session.
+          </p>
+
+          
+        </motion.div>
+
+        <motion.form
+          className="appointment-form"
+          onSubmit={handleScheduleAppointment}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.08 }}
+        >
+          <div className="appointment-form-heading">
+            <span>Appointment request</span>
+            <h2>Tell us how we can help.</h2>
+          </div>
+
+          <label className="appointment-field">
+            <span>Email address</span>
+            <input
+              type="email"
+              placeholder=""
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+
+          <label className="appointment-field">
+            <span>Preferred date and time</span>
+            <input
+              type="datetime-local"
+              value={appointmentDate}
+              min={minimumDateTime}
+              onChange={(e) => setAppointmentDate(e.target.value)}
+            />
+          </label>
+
+          <label className="appointment-field">
+            <span>Reason for appointment</span>
+            <textarea
+              placeholder="Describe your question or banking need..."
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              maxLength={600}
+            />
+          </label>
+
+          <div className="appointment-meta">
+            <span>{reason.trim().length}/600 characters</span>
+          </div>
+
+          {message && <p className="appointment-message">{message}</p>}
+
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Scheduling...' : 'Schedule appointment'}
+          </button>
+        </motion.form>
+      </section>
+    </main>
   );
 };
 

@@ -1,11 +1,11 @@
-.security-page {
+.profile-edit-page {
   min-height: calc(100vh - 74px);
   background: linear-gradient(180deg, #f7faf8 0%, #edf3f0 52%, #f8faf9 100%);
   color: #17211d;
   padding: 48px 20px 56px;
 }
 
-.security-shell {
+.profile-edit-shell {
   display: grid;
   grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1fr);
   gap: 36px;
@@ -14,8 +14,8 @@
   margin: 0 auto;
 }
 
-.security-eyebrow,
-.security-form-heading span {
+.profile-edit-eyebrow,
+.profile-edit-form-heading span {
   margin: 0;
   color: #2a7d72;
   font-size: 0.78rem;
@@ -24,7 +24,7 @@
   text-transform: uppercase;
 }
 
-.security-info h1 {
+.profile-edit-info h1 {
   max-width: 720px;
   margin: 12px 0 0;
   color: #101815;
@@ -33,7 +33,7 @@
   letter-spacing: 0;
 }
 
-.security-info p {
+.profile-edit-info p {
   max-width: 600px;
   margin: 20px 0 0;
   color: #56645f;
@@ -41,22 +41,7 @@
   line-height: 1.7;
 }
 
-.security-rules {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 24px;
-}
-
-.security-rules span {
-  border-radius: 999px;
-  background: #e6f3ef;
-  color: #174f49;
-  font-weight: 900;
-  padding: 9px 12px;
-}
-
-.security-form {
+.profile-edit-form {
   display: grid;
   gap: 16px;
   max-width: none;
@@ -68,7 +53,7 @@
   padding: 32px;
 }
 
-.security-form-heading h2 {
+.profile-edit-form-heading h2 {
   margin: 8px 0 0;
   color: #101815;
   font-size: clamp(1.7rem, 3vw, 2.45rem);
@@ -76,15 +61,15 @@
   letter-spacing: 0;
 }
 
-.security-field {
+.profile-edit-field {
   display: grid;
   gap: 8px;
   color: #17211d;
   font-weight: 900;
 }
 
-.security-field input,
-.security-field select {
+.profile-edit-field input,
+.profile-edit-field select {
   width: 100%;
   min-height: 48px;
   box-sizing: border-box;
@@ -97,13 +82,13 @@
   outline: none;
 }
 
-.security-field input:focus,
-.security-field select:focus {
+.profile-edit-field input:focus,
+.profile-edit-field select:focus {
   border-color: #2a9d8f;
   box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.16);
 }
 
-.security-message {
+.profile-edit-message {
   margin: 0;
   border-radius: 6px;
   background: #fff1d1;
@@ -113,7 +98,7 @@
   padding: 12px;
 }
 
-.security-form button {
+.profile-edit-form button {
   min-height: 48px;
   border: 0;
   border-radius: 6px;
@@ -123,27 +108,27 @@
   cursor: pointer;
 }
 
-.security-form button:hover:not(:disabled) {
+.profile-edit-form button:hover:not(:disabled) {
   background: #22312c;
 }
 
-.security-form button:disabled {
+.profile-edit-form button:disabled {
   cursor: not-allowed;
   opacity: 0.68;
 }
 
 @media (max-width: 920px) {
-  .security-shell {
+  .profile-edit-shell {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .security-page {
+  .profile-edit-page {
     padding: 30px 14px 42px;
   }
 
-  .security-form {
+  .profile-edit-form {
     padding: 24px;
   }
 }

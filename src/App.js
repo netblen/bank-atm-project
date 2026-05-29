@@ -19,12 +19,12 @@ import FeedbacknIssueReports from './components/FeedbacknIssueReports';
 import UserTable from './components/UserTable';
 import ActivityLog from './components/ActivityLog';
 import EditUserAdmin from './components/EditUserAdmin';
-import SystemPerformanceDashboard from './components/SystemPerformanceDashboard'
+import SystemPerformanceDashboard from './components/SystemPerformanceDashboard';
 import ScheduleAppointment from './components/ScheduleAppointment';
 import RateCustomerExperience from './components/RateCustomerExperience';
 import RecentActivity from './components/RecentActivity';
-import FinancialGoals from "./components/FinancialGoals";
-import TransactionGlossary from "./components/TransactionGlossary";
+import FinancialGoals from './components/FinancialGoals';
+import TransactionGlossary from './components/TransactionGlossary';
 import Locator from './components/Locator';
 import Survey from './components/Survey';
 
@@ -39,8 +39,8 @@ const App = () => {
           <Route path="/schedule-appointment" element={<ScheduleAppointment />} />
           <Route path="/rate-customer-experience" element={<RateCustomerExperience />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />
-          <Route path="/SystemPerformanceDashboard" element ={<SystemPerformanceDashboard/>}/>
-          <Route path="/users" element={<UserTable />}/>
+          <Route path="/SystemPerformanceDashboard" element={<SystemPerformanceDashboard />} />
+          <Route path="/users" element={<UserTable />} />
           <Route path="/edit-user-admin/:userId" element={<EditUserAdmin />} />
           <Route path="/activityLog" element={<ActivityLog />} />
           <Route path="/SignIn" element={<SignIn />} />
@@ -54,7 +54,7 @@ const App = () => {
           <Route path="/UserEdit" element={<UserEdit />} />
           <Route path="/FeedbacknIssueReports" element={<FeedbacknIssueReports />} />
           <Route path="/security" element={<SecurityPassword />} />
-          <Route path="/FinancialGoals" element={<FinancialGoals userId={1} />} />
+          <Route path="/FinancialGoals" element={<FinancialGoals />} />
           <Route path="/TransactionGlossary" element={<TransactionGlossary />} />
           <Route path="/Locator" element={<Locator />} />
           <Route path="/Survey" element={<Survey />} />

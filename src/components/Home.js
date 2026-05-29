@@ -24,7 +24,7 @@ const Home = () => {
     {
       id: 3,
       title: 'Guided money actions',
-      description: 'Move through deposits, withdrawals, transfers, payments, and goals with less guesswork.',
+      description: 'Move through deposits, withdrawals, transfers, payments, and goals.',
       metric: '5+',
       label: 'money tools',
     },

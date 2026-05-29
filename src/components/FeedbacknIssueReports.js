@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useUser } from './UserContext';
 import { useNavigate } from 'react-router-dom';
-import './FeedbacknIssueReports.css';
-import withAutoLogout from './withAutoLogout';
 import { motion } from 'framer-motion';
+import { useUser } from './UserContext';
+import withAutoLogout from './withAutoLogout';
+import './FeedbacknIssueReports.css';
 
 const Feedback = () => {
   const { userEmail } = useUser();
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState('');
-  const [issueType, setIssueType] = useState('feedback'); // 'feedback' or 'technical-issue'
+  const [issueType, setIssueType] = useState('feedback');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setLoading(true);
     setErrorMessage('');
     setSuccessMessage('');
@@ -30,20 +30,14 @@ const Feedback = () => {
     try {
       await axios.post('https://localhost:7243/api/Users/Feedback', {
         email: userEmail,
-        comments: feedback,
+        comments: feedback.trim(),
         type: issueType,
       });
 
-      setSuccessMessage(
-        issueType === 'feedback' 
-          ? 'Feedback submitted successfully!' 
-          : 'Technical issue reported successfully!'
-      );
-      alert(
-        issueType === 'feedback' 
-          ? 'Thank you for your feedback!' 
-          : 'Your technical issue has been reported!'
-      );
+      const success =
+        issueType === 'feedback' ? 'Feedback submitted successfully!' : 'Technical issue reported successfully!';
+      setSuccessMessage(success);
+      alert(issueType === 'feedback' ? 'Thank you for your feedback!' : 'Your technical issue has been reported!');
       setFeedback('');
       navigate('/atm-simulator');
     } catch (error) {
@@ -55,71 +49,67 @@ const Feedback = () => {
   };
 
   return (
-    <motion.div
-      className="feedback-form"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.5 }}
-    >
-      <h2>Send Your Feedback or Report an Issue</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <select
-            value={issueType}
-            onChange={(e) => setIssueType(e.target.value)}
-            required
-          >
-            <option value="feedback">Feedback</option>
-            <option value="technical-issue">Report Technical Issue</option>
-          </select>
-        </label>
-
-        <motion.textarea
-          name="feedback"
-          value={feedback}
-          onChange={(e) => setFeedback(e.target.value)}
-          required
-          placeholder="Write your comment here..."
-          initial={{ scale: 1 }}
-          whileFocus={{ scale: 1.05 }}
-          transition={{ duration: 0.2 }}
-        />
-
-        <motion.button
-          type="submit"
-          disabled={loading}
-          initial={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          transition={{ duration: 0.2 }}
+    <main className="feedback-page">
+      <section className="feedback-shell">
+        <motion.div
+          className="feedback-info"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
         >
-          {loading ? 'Sending...' : 'Submit'}
-        </motion.button>
+          <p className="feedback-eyebrow">Support center</p>
+          <h1>Send feedback or report an issue.</h1>
+          <p>
+            Share what worked well or describe the technical problem you found so the support team
+            can review it.
+          </p>
+        </motion.div>
 
-        {errorMessage && (
-          <motion.div 
-            className="message error"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {errorMessage}
-          </motion.div>
-        )}
-        {successMessage && (
-          <motion.div 
-            className="message success"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {successMessage}
-          </motion.div>
-        )}
-      </form>
-    </motion.div>
+        <motion.form
+          className="feedback-form"
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.08 }}
+        >
+          <div className="feedback-form-heading">
+            <span>Message type</span>
+            <h2>What would you like to send?</h2>
+          </div>
+
+          <label className="feedback-field">
+            <span>Category</span>
+            <select value={issueType} onChange={(event) => setIssueType(event.target.value)} required>
+              <option value="feedback">Feedback</option>
+              <option value="technical-issue">Report Technical Issue</option>
+            </select>
+          </label>
+
+          <label className="feedback-field">
+            <span>Comment</span>
+            <textarea
+              name="feedback"
+              value={feedback}
+              onChange={(event) => setFeedback(event.target.value)}
+              required
+              maxLength={600}
+              placeholder="Write your comment here..."
+            />
+          </label>
+
+          <div className="feedback-meta">
+            <span>{feedback.trim().length}/600 characters</span>
+          </div>
+
+          {errorMessage && <p className="feedback-message error">{errorMessage}</p>}
+          {successMessage && <p className="feedback-message success">{successMessage}</p>}
+
+          <button type="submit" disabled={loading}>
+            {loading ? 'Sending...' : 'Submit message'}
+          </button>
+        </motion.form>
+      </section>
+    </main>
   );
 };
 

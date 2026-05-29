@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './ForgotPassword.css';
 
 const ForgotPassword = () => {
@@ -9,32 +9,38 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
-  
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const validatePassword = (password) => {
-    return /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{6,}$/.test(password);
-  };
+  const validatePassword = (password) => /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{6,}$/.test(password);
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Validación de contraseña
-    if (!validatePassword(newPassword)) {
-      alert('Password must contain at least one uppercase letter, one special character, and one number, and be at least 6 characters long.');
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setMessage('');
+
+    const email = contactInfo.trim();
+
+    if (!validateEmail(email)) {
+      setMessage('Please enter a valid email address.');
       return;
     }
 
-    // Confirmación de contraseña
+    if (!validatePassword(newPassword)) {
+      setMessage('Password needs 6+ characters, one uppercase letter, one number, and one special character.');
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
-      alert('Passwords do not match.');
+      setMessage('Passwords do not match.');
       return;
     }
 
     try {
+      setIsLoading(true);
       const response = await axios.post('https://localhost:7243/api/users/reset-password', {
-        contactInfo,
-        securityCode,
+        contactInfo: email,
+        securityCode: securityCode.trim(),
         newPassword,
       });
 
@@ -45,54 +51,89 @@ const ForgotPassword = () => {
     } catch (error) {
       console.error('Error resetting password:', error);
       setMessage(error.response?.data?.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="forgot-password-form">
-      <h2>Reset Password</h2>
-      <form onSubmit={handleSubmit}>
-        <p>Please enter your email to reset your password.</p>
-        <div>
-          <label>Email:</label><br />
-          <input
-            type="text"
-            value={contactInfo}
-            onChange={(e) => setContactInfo(e.target.value)}
-            required
-          />
+    <main className="forgot-page">
+      <section className="forgot-shell">
+        <div className="forgot-info">
+          <p className="forgot-eyebrow">Account recovery</p>
+          <h1>Reset your password securely.</h1>
+          <p>
+            Confirm your email and recovery code, then create a stronger password for your account.
+          </p>
+
+          <div className="forgot-rules">
+            <span>Uppercase letter</span>
+            <span>Number</span>
+            <span>Special character</span>
+            <span>6+ characters</span>
+          </div>
         </div>
-        <div>
-          <label>Security Code (Enter "E2UY32"):</label><br />
-          <input
-            type="text"
-            value={securityCode}
-            onChange={(e) => setSecurityCode(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>New Password:</label><br />
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirm New Password:</label><br />
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Reset Password</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+
+        <form className="forgot-form" onSubmit={handleSubmit}>
+          <div className="forgot-form-heading">
+            <span>Recovery form</span>
+            <h2>Create a new password</h2>
+          </div>
+
+          <label className="forgot-field">
+            <span>Email</span>
+            <input
+              type="email"
+              value={contactInfo}
+              onChange={(event) => setContactInfo(event.target.value)}
+              placeholder="you@example.com"
+              required
+            />
+          </label>
+
+          <label className="forgot-field">
+            <span>Security code</span>
+            <input
+              type="text"
+              value={securityCode}
+              onChange={(event) => setSecurityCode(event.target.value)}
+              placeholder="Enter recovery code"
+              required
+            />
+          </label>
+
+          <label className="forgot-field">
+            <span>New password</span>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
+              required
+            />
+          </label>
+
+          <label className="forgot-field">
+            <span>Confirm new password</span>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              required
+            />
+          </label>
+
+          {message && <p className="forgot-message">{message}</p>}
+
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Resetting...' : 'Reset password'}
+          </button>
+
+          <p className="forgot-return">
+            Remembered it? <Link to="/signin">Back to sign in</Link>
+          </p>
+        </form>
+      </section>
+    </main>
   );
 };
 
