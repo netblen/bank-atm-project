@@ -1,70 +1,130 @@
-# Getting Started with Create React App
+# Bank ATM Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack ATM banking app with a React frontend and an ASP.NET Core backend. The app includes customer banking pages, admin tools, transaction activity, appointments, surveys, feedback, and financial goals.
 
-## Available Scripts
+## Tech Stack
 
-In the project directory, you can run:
+- Frontend: React, React Router, Axios, Chart.js, Leaflet
+- Backend: ASP.NET Core 8 Web API
+- Database: SQL Server with Entity Framework Core
+- Dev command: `npm run dev` starts the frontend and backend together
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Sign in, sign up, and forgot password flow
+- Customer dashboard with ATM simulator, checking, savings, payments, and financial goals
+- Recent activity page with unread highlights and a mark-all-read action
+- Schedule appointments and rate customer experience
+- Locator and transaction glossary pages
+- Admin dashboard with users, activity logs, feedback reports, and performance charts
+- Responsive frontend styling across the main pages
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Requirements
 
-### `npm test`
+Install these before running the project:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js
+- npm
+- .NET 8 SDK
+- SQL Server or SQL Server Express
 
-### `npm run build`
+## Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Clone the repository and install frontend dependencies:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone https://github.com/netblen/bank-atm-project.git
+cd bank-atm-project
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Create a local backend settings file:
 
-### `npm run eject`
+```bash
+copy atm-backend\appsettings.json atm-backend\appsettings.Local.json
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Update `atm-backend/appsettings.Local.json` with your local SQL Server connection string. This file is ignored by Git so database passwords do not get pushed.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Example:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=atm_db;User Id=YOUR_USER;Password=YOUR_PASSWORD;Encrypt=False;TrustServerCertificate=True;"
+  }
+}
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The backend creates the database automatically in development with `EnsureCreated()` when SQL Server is reachable.
 
-## Learn More
+## Run The App
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+From the project root, run:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm run dev
+```
 
-### Code Splitting
+This starts:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Backend: `https://localhost:7243`
+- Frontend: `http://localhost:3000`
 
-### Analyzing the Bundle Size
+Open the frontend in your browser:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```text
+http://localhost:3000
+```
 
-### Making a Progressive Web App
+Stop both servers with `Ctrl + C` in the terminal.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Useful Commands
 
-### Advanced Configuration
+Run only the React frontend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+npm start
+```
 
-### Deployment
+Run only the backend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+cd atm-backend
+dotnet run --launch-profile https
+```
 
-### `npm run build` fails to minify
+Build the frontend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm run build
+```
+
+Build the backend:
+
+```bash
+dotnet build atm-backend\atm-backend.csproj
+```
+
+## Troubleshooting
+
+If sign in or sign up fails, make sure the backend is running and SQL Server is available.
+
+If the browser blocks the backend HTTPS certificate, trust the local .NET development certificate:
+
+```bash
+dotnet dev-certs https --trust
+```
+
+If you see Browserslist warnings, the app can still run. To refresh the browser compatibility database, run:
+
+```bash
+npx update-browserslist-db@latest
+```
+
+## Notes
+
+- Do not commit `atm-backend/appsettings.Local.json`.
+- Do not commit `node_modules`, `build`, `bin`, or `obj` folders.
+- Do not commit personal editor folders like `.vscode/`.
+- The main development command for this project is `npm run dev`.
